@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "nuxi dev",
     "build": "NITRO_PRESET=vercel-edge nuxi build",
+    "build:worker": "NITRO_PRESET=cloudflare nuxi build",
     "generate": "nuxi generate",
     "preview": "nuxi preview"
   },
