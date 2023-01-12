@@ -1,7 +1,17 @@
 export default defineAppConfig({
+  content: {
+    markdown: {
+      remarkExternalLinks: {
+        content: {
+          type: "element",
+          tagName: "icon-external-link",
+        },
+      },
+    },
+  },
   docus: {
     title: 'JoyID Docs',
-    description: 'The best place to start your documentation.',
+    description: 'Developer documentation for JoyID',
     image: 'https://user-images.githubusercontent.com/904724/185365452-87b7ca7b-6030-4813-a2db-5e65c785bf88.png',
     socials: {
       github: '/nervina-labs/joyid',
@@ -15,9 +25,12 @@ export default defineAppConfig({
       showLinkIcon: true,
       exclude: []
     },
-    github: {
-
-    },
-    footer: {}
+    github: '',
+    footer: {
+      credits: {
+        href: 'https://nervina.io/',
+        text: 'Nervina Labs'
+      }
+    }
   }
 })
