@@ -8,12 +8,15 @@
   "packageManager": "pnpm@7.13.5",
   "scripts": {
     "dev": "nuxi dev",
-    "build": "nuxi build",
+    "build": "NITRO_PRESET=vercel-edge nuxi build",
     "generate": "nuxi generate",
     "preview": "nuxi preview"
   },
   "devDependencies": {
-    "nuxt": "^3.0.0",
-    "@nuxt-themes/docus": "^1.4.5"
+    "@nuxt-themes/docus": "^1.4.5",
+    "nuxt": "^3.0.0"
+  },
+  "dependencies": {
+    "@docsearch/js": "^3.3.2"
   }
 }
