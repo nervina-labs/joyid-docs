@@ -1,9 +1,0 @@
-{
-    "redirects": [
-        {
-            "source": "/",
-            "destination": "/guide/get-started",
-            "permanent": true
-        }
-    ]
-}
