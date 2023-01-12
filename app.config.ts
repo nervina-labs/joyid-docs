@@ -25,7 +25,11 @@ export default defineAppConfig({
       showLinkIcon: true,
       exclude: []
     },
-    github: '',
+    github: {
+      root: 'content',
+      edit: true,
+      contributors: false
+    },
     footer: {
       credits: {
         href: 'https://nervina.io/',
