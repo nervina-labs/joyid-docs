@@ -1,11 +1,11 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@nuxt-themes/docus': ^1.4.4
+  '@nuxt-themes/docus': ^1.4.5
   nuxt: ^3.0.0
 
 devDependencies:
-  '@nuxt-themes/docus': 1.4.4_nuxt@3.0.0
+  '@nuxt-themes/docus': 1.4.5_nuxt@3.0.0
   nuxt: 3.0.0
 
 packages:
@@ -560,8 +560,8 @@ packages:
       fastq: 1.14.0
     dev: true
 
-  /@nuxt-themes/docus/1.4.4_nuxt@3.0.0:
-    resolution: {integrity: sha512-hVbFWD/2qotFVBQtau2eeR2g74k9lLdKZBU+voB2GTo6TbtC1SfVEUlh/KeSbR3DqvfIO1pNQnSTJFGvc4vMdg==}
+  /@nuxt-themes/docus/1.4.5_nuxt@3.0.0:
+    resolution: {integrity: sha512-qievU7VeETu6CvwYQ7wDRLbNblNugghGesWKz/NXWhtxjxShJlUr1cp6SOtK0/RRMRX5HYE/hDKSz6yqMcR6Ew==}
     dependencies:
       '@nuxt-themes/elements': 0.4.4
       '@nuxt-themes/tokens': 1.5.3
@@ -635,7 +635,7 @@ packages:
       destr: 1.2.2
       detab: 3.0.2
       html-tags: 3.2.0
-      json5: 2.2.1
+      json5: 2.2.3
       knitwork: 1.0.0
       listhen: 1.0.1
       mdast-util-to-hast: 12.2.4
@@ -5710,7 +5710,7 @@ packages:
       fs-extra: 10.1.0
       glob: 8.0.3
       jiti: 1.16.0
-      json5: 2.2.1
+      json5: 2.2.3
       jsonc-parser: 3.2.0
       lodash.template: 4.5.0
       tinycolor2: 1.4.2

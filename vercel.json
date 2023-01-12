@@ -1,9 +1,9 @@
 {
-    "builds": [
+    "redirects": [
         {
-            "src": "nuxt.config.js",
-            "use": "@nuxtjs/vercel-builder",
-            "config": {}
+            "source": "/",
+            "destination": "/guide/get-started",
+            "permanent": true
         }
     ]
 }
