@@ -1,5 +1,5 @@
 <template>
-    <div class="logo">
+    <div class="logo" @click="click">
         <svg width="60" height="30" viewBox="0 0 122 82" fill="none" xmlns="http://www.w3.org/2000/svg" role="img"
             focusable="false">
             <path
@@ -36,6 +36,19 @@
         </svg>
     </div>
 </template>
+
+<script>
+export default {
+    name: 'Logo',
+    methods: {
+        click(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            location.href = "/guide/get-started"
+        }
+    }
+}
+</script>
 
 <style>
 .logo {
