@@ -1,4 +1,8 @@
 {
-    "source": "/",
-    "destination": "/guide/get-started"
+    "redirects": [
+        {
+            "source": "/",
+            "destination": "/guide/get-started"
+        }
+    ]
 }
