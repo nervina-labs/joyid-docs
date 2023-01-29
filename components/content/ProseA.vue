@@ -7,20 +7,26 @@ export default {
         target: {
             type: String,
         },
+        to: {
+            type: String,
+        }
     },
     computed: {
+        link() {
+            return this.to ?? this.href
+        },
         isExternal() {
-            return this.href?.startsWith('http')
+            return this.link?.startsWith('http')
         }
     },
 }
 </script>
 
 <template>
-    <a v-if="isExternal" :href="href" target="_blank">
+    <a v-if="isExternal" :href="link" target="_blank">
         <slot />
     </a>
-    <NuxtLink v-if="!isExternal" :href="href" :target="target">
+    <NuxtLink v-if="!isExternal" :href="link" :target="target">
         <slot />
     </NuxtLink>
 </template>
