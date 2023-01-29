@@ -1,10 +1,5 @@
 export default defineAppConfig({
   hasDocSearch: true,
-  github: {
-    owner: 'nervina-labs',
-    repo: 'joyid-docs',
-    branch: 'main'
-  },
   content: {
     hasDocSearch: true,
     markdown: {
@@ -34,7 +29,10 @@ export default defineAppConfig({
     github: {
       root: 'content',
       edit: true,
-      contributors: false
+      contributors: false,
+      owner: 'nervina-labs',
+      repo: 'joyid-docs',
+      branch: 'main'
     },
     footer: {
       credits: {
