@@ -3,16 +3,16 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'dark'
   },
-  // runtimeConfig: {
-  //   public: {
-  //     algolia: {
-  //       applicationId: '',
-  //       apiKey: '',
-  //       langAttribute: 'lang',
-  //       docSearch: {
-  //         // indexName: 'content-nuxtjs'
-  //       }
-  //     }
-  //   }
-  // }
+  runtimeConfig: {
+    public: {
+      algolia: {
+        applicationId: '',
+        apiKey: '',
+        langAttribute: 'lang',
+        docSearch: {
+          // indexName: 'content-nuxtjs'
+        }
+      }
+    }
+  }
 })
