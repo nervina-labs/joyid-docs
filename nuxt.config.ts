@@ -10,7 +10,9 @@ export default defineNuxtConfig({
         apiKey: '',
         langAttribute: 'lang',
         docSearch: {
-          // indexName: 'content-nuxtjs'
+          appId: 'WG9OAWWAJE',
+          apiKey: 'dde595281a3b929f618568917d677d81',
+          indexName: 'joy',
         }
       }
     }
