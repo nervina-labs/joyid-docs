@@ -1,8 +1,9 @@
 {
     "extends": [
-      "@nuxtjs"
+      "@nuxtjs",
+      ":disableDependencyDashboard"
     ],
     "lockFileMaintenance": {
-      "enabled": true
+      "enabled": false
     }
 }
