@@ -1,8 +1,8 @@
 # `JoyIDProvider`
 
-`JoyIDProvider` is a sub-class of [`JsonRpcProvider`](https://docs.ethers.org/v5/api/providers/jsonrpc-provider/). It the same interface/API as `Provider` in `ethers.js to interact with AXON node, but it also provides some JoyID specific methods.
+`JoyIDProvider` is a sub-class of [`JsonRpcProvider`](https://docs.ethers.org/v5/api/providers/jsonrpc-provider/){:target="_blank"}. It the same interface/API as `Provider` in `ethers.js` to interact with AXON node, but it also provides some JoyID specific methods.
 
-For more information about `Provider`, please refer to [ethers.js documentation](https://docs.ethers.org/v5/api/providers/provider/).
+For more information about `Provider`, please refer to [ethers.js documentation](https://docs.ethers.org/v5/api/providers/provider/){:target="_blank"}.
 
 ## Methods
 

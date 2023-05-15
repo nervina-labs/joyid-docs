@@ -2,7 +2,7 @@
 
 `JoyIDSigner` is sub-class of `Signer` in `ethers.js`, it provides the same interface/API as `Signer` in `ethers.js` to interact with JoyID, but it also provides some JoyID specific methods.
 
-For more information about `Signer`, please refer to [ethers.js documentation](https://docs.ethers.io/v5/api/signer/).
+For more information about `Signer`, please refer to [ethers.js documentation](https://docs.ethers.io/v5/api/signer/){:target="_blank"}.
 
 ## Methods
 
@@ -29,7 +29,13 @@ You may have noticed that in JoyID we have been signing `challenge` instead of `
 
 `message` is what JoyID actually signs, which is a combination of `challenge` and some other data (such as authenticator data, etc.), and `challenge` will be always included in `message`.
 
-For more information, you can check out the [WebAuthn Spec](https://www.w3.org/TR/webauthn-2/#sctn-op-get-assertion).
+For more information, you can check out the [WebAuthn Spec](https://www.w3.org/TR/webauthn-2/#sctn-op-get-assertion){:target="_blank"}.
+
+::
+
+::list{type="info"}
+
+* See also: [Guide - Verify Signature](/guide/verification/verify-signature) with a live demo
 
 ::
 
