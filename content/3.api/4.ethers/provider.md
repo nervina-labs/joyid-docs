@@ -1,8 +1,8 @@
 # `JoyIDProvider`
 
-`JoyIDProvider` is a sub-class of [`JsonRpcProvider`](https://docs.ethers.org/v5/api/providers/jsonrpc-provider/){:target="_blank"}. It the same interface/API as `Provider` in `ethers.js` to interact with AXON node, but it also provides some JoyID specific methods.
+`JoyIDProvider` is a sub-class of [`JsonRpcProvider`](https://docs.ethers.org/v5/api/providers/jsonrpc-provider/){:target="\_blank"}. It the same interface/API as `Provider` in `ethers.js` to interact with AXON node, but it also provides some JoyID specific methods.
 
-For more information about `Provider`, please refer to [ethers.js documentation](https://docs.ethers.org/v5/api/providers/provider/){:target="_blank"}.
+For more information about `Provider`, please refer to [ethers.js documentation](https://docs.ethers.org/v5/api/providers/provider/){:target="\_blank"}.
 
 ## Methods
 
@@ -115,5 +115,9 @@ const balance = await provider.getBalance(connectedAddress)
 
 // get JoyID signer and sign a transaction
 const signer = provider.getSigner(connectedAddress)
-const tx = await signer.sendTransaction({ to: '0x...', value: '100', from: connectedAddress })
+const tx = await signer.sendTransaction({
+  to: '0x...',
+  value: '100',
+  from: connectedAddress,
+})
 ```

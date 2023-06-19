@@ -2,7 +2,7 @@
 
 `JoyIDSigner` is sub-class of `Signer` in `ethers.js`, it provides the same interface/API as `Signer` in `ethers.js` to interact with JoyID, but it also provides some JoyID specific methods.
 
-For more information about `Signer`, please refer to [ethers.js documentation](https://docs.ethers.io/v5/api/signer/){:target="_blank"}.
+For more information about `Signer`, please refer to [ethers.js documentation](https://docs.ethers.io/v5/api/signer/){:target="\_blank"}.
 
 ## Methods
 
@@ -11,10 +11,7 @@ For more information about `Signer`, please refer to [ethers.js documentation](h
 Open a JoyID app popup window to sign message.
 
 ```typescript
-function signChallenge(
-  challenge: string | Uint8Array,
-  popupConfig?: PopupConfig
-): Promise<SignMessageResponse>
+function signChallenge(challenge: string | Uint8Array, popupConfig?: PopupConfig): Promise<SignMessageResponse>
 ```
 
 ::callout{type="info"}
@@ -29,13 +26,13 @@ You may have noticed that in JoyID we have been signing `challenge` instead of `
 
 `message` is what JoyID actually signs, which is a combination of `challenge` and some other data (such as authenticator data, etc.), and `challenge` will be always included in `message`.
 
-For more information, you can check out the [WebAuthn Spec](https://www.w3.org/TR/webauthn-2/#sctn-op-get-assertion){:target="_blank"}.
+For more information, you can check out the [WebAuthn Spec](https://www.w3.org/TR/webauthn-2/#sctn-op-get-assertion){:target="\_blank"}.
 
 ::
 
 ::list{type="info"}
 
-* See also: [Guide - Verify Signature](/guide/verification/verify-signature) with a live demo
+- See also: [Guide - Verify Signature](/guide/verification/verify-signature) with a live demo
 
 ::
 
@@ -44,10 +41,7 @@ For more information, you can check out the [WebAuthn Spec](https://www.w3.org/T
 Open a JoyID app popup window to sign transaction.
 
 ```typescript
-function signTransaction(
-  tx: TransactionRequest,
-  popupConfig?: PopupConfig
-): Promise<string>
+function signTransaction(tx: TransactionRequest, popupConfig?: PopupConfig): Promise<string>
 ```
 
 ### `sendTransaction`
@@ -55,10 +49,7 @@ function signTransaction(
 Open a JoyID app popup window to sign transaction and send it.
 
 ```typescript
-function sendTransaction(
-  tx: TransactionRequest,
-  popupConfig?: PopupConfig
-): Promise<providers.TransactionResponse>
+function sendTransaction(tx: TransactionRequest, popupConfig?: PopupConfig): Promise<providers.TransactionResponse>
 ```
 
 ### `sendUncheckedTransaction`
@@ -85,7 +76,6 @@ interface PopupConfig {
    */
   popup?: Window
 }
-
 
 interface SignMessageResponse {
   // The public key of the authenticated user
@@ -162,5 +152,9 @@ const connectedAddress = res.ethAddress
 
 // get JoyID signer and sign a transaction
 const signer = provider.getSigner(connectedAddress)
-const tx = await signer.sendTransaction({ to: '0x...', value: '100', from: connectedAddress })
+const tx = await signer.sendTransaction({
+  to: '0x...',
+  value: '100',
+  from: connectedAddress,
+})
 ```
