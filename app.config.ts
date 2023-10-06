@@ -15,7 +15,7 @@ export default defineAppConfig({
     title: 'JoyID Docs',
     description: 'Developer documentation for JoyID',
     socials: {
-      github: 'nervina-labs/joyid',
+      github: 'nervina-labs/joyid-docs',
     },
     aside: {
       level: 1,
