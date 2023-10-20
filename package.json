@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=16.20.2"
   },
-  "packageManager": "pnpm@7.13.5",
+  "packageManager": "pnpm@7.33.6",
   "scripts": {
     "dev": "nuxi dev",
     "build": "NITRO_PRESET=vercel nuxi build",
@@ -15,11 +15,11 @@
     "format": "prettier --write \"content/{**/, *}*.md\""
   },
   "devDependencies": {
-    "@nuxt-themes/docus": "1.11.1",
+    "@nuxt-themes/docus": "1.15.0",
     "prettier": "latest",
-    "nuxt": "3.4.3"
+    "nuxt": "3.8.0"
   },
   "dependencies": {
-    "@docsearch/js": "^3.3.2"
+    "@docsearch/js": "^3.5.2"
   }
 }
