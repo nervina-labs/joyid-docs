@@ -1,0 +1,18 @@
+{
+  "guide": {
+    "type": "page",
+    "title": "Guide"
+  },
+  "apis": {
+    "type": "page",
+    "title": "API"
+  },
+  "showcase": {
+    "type": "page",
+    "title": "Showcase",
+    "theme": {
+      "typesetting": "article",
+      "layout": "full"
+    }
+  }
+}

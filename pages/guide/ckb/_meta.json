@@ -1,0 +1,7 @@
+{
+  "connect": "Connect",
+  "sign-message": "Sign Message",
+  "verify-message": "Verify Message",
+  "sign-transaction": "Sign Transaction",
+  "sign-cota": "Sign Cota NFT Transaction"
+}
