@@ -1,0 +1,60 @@
+# initConfig
+
+Config your app name and logo, and the network you want to connect to.
+
+## Types
+
+```ts
+function initConfig(config?: EvmConfig): EvmConfig
+```
+
+### EvmConfig
+
+```ts
+interface EvmConfig {
+  /**
+   * The name of your app
+   */
+  name?: string
+  /**
+   * The logo of your app
+   */
+  logo?: string
+  /**
+   * The RPC URL of the eth node that your app is using
+   */
+  rpcURL?: string
+  /**
+   * The network that your app is using, defaults to Sepolia testnet
+   */
+  network?: Network
+  /**
+   * The URL of JoyID app url that your app is integrated with, defaults to https://testnet.joyid.dev
+   */
+  joyidAppURL?: string
+}
+
+interface Network {
+  name: string
+  chainId: string
+}
+```
+
+## Example
+
+```js
+// in your app entry file
+initConfig({
+  // your app name
+  name: 'EVM demo',
+  // your app logo,
+  logo: 'https://fav.farm/🆔',
+  // optional, config for the network you want to connect to
+  network: {
+    chainId: 1,
+    name: 'Ethereum Mainnet',
+  },
+  // optional
+  rpcURL: 'https://cloudflare-eth.com'
+})
+```

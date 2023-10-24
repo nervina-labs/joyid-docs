@@ -1,0 +1,22 @@
+# signMessage
+
+Signers an [EIP-191](https://eips.ethereum.org/EIPS/eip-191) prefixed personal message. If the message is a string, it is signed as UTF-8 encoded bytes. It is not interpretted as a BytesLike; so the string "0x1234" is signed as six characters, not two bytes.
+
+To sign that example as two bytes, the Uint8Array should be used (i.e. `new Uint8Array([ 0x12, 0x34 ])`).
+
+## Types
+
+```ts
+function signMessage(message: string | Uint8Array, signerAddress?: string): Promise<string>
+```
+
+## Example
+
+```ts
+import { signMessage } from '@joyid/evm'
+
+async function signMessageOnClick() {
+  const signature = await signMessage('Hello, world!', '<your connected address>')
+  console.log(`Signature: ${signature}`)
+}
+```

@@ -1,7 +1,11 @@
 {
+  "init-config": "initConfig",
   "connect": "connect",
-  "sign": "signChallenge",
+  "disconnect": "disconnect",
+  "get-connected-address": "getConnectedAddress",
+  "sign-message": "signMessage",
   "sign-tx": "signTransaction",
-  "sign-cota": "signCotaNFTTx",
-  "init-config": "initConfig"
+  "send-tx": "sendTransaction",
+  "sign-typed-data": "signTypedData",
+  "redirect-api": "Redirect API"
 }

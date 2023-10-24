@@ -1,7 +1,3 @@
 {
-  "connect": "connect",
-  "sign": "signChallenge",
-  "sign-tx": "signTransaction",
-  "sign-cota": "signCotaNFTTx",
-  "init-config": "initConfig"
+  "nostr": "nostr"
 }

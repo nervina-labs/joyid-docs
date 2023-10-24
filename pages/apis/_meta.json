@@ -2,7 +2,8 @@
   "index": "Overview",
   "evm": "@joyid/evm",
   "ckb": "@joyid/ckb",
-  "nostr": "@joyid/nostr",
   "ethers": "@joyid/ethers",
+  "nostr": "@joyid/nostr",
+  "wagmi": "@joyid/wagmi",
   "rainbowkit": "@joyid/rainbowkit"
 }
