@@ -1,0 +1,56 @@
+# Ethereum Provider
+
+JoyID Ethereum Provider implements [EIP-1193 ↗](https://eips.ethereum.org/EIPS/eip-1193) for JoyID, which is a standard interface for Ethereum providers. This allows JoyID to be compatible with any Ethereum provider that implements this standard.
+
+If you want to use JoyID, but JoyID SDK does not support your library/provider for now, you can use this package to create a custom provider for JoyID.
+
+import { Callout } from 'nextra/components'
+
+## Installation
+
+`@joyid/ethereum-provider` has a peer dependency on `viem`, you must have `viem` installed.
+
+import { PackageManagerTabs } from '@/components/npm-tabs'
+
+<PackageManagerTabs command="install @joyid/ethereum-provider viem" />
+
+## Usage
+
+There are a wide range of uses for the Ethereum Provider, we'll just provide some ideas, using it in a production environment requires more rigorous code than the following demo.
+
+### Ethers.js v6 Provider
+
+```ts
+import { BrowserProvider } from 'ethers'
+import { Chain } from 'viem'
+import { EthereumProvider, EvmConfig } from '@joyid/ethereum-provider'
+
+function createJoyIDProvider(chains: Chain[], config: EvmConfig) {
+  const ethereum = new EthereumProvider(chains, joyidConfig)
+  const provider = new BrowserProvider(ethereum)
+  return provider
+}
+```
+
+<Callout type="warning" emoji="⚠️">
+Note that in the example above, we have `ethers` and `viem` installed as dependencies, which may hurt your bundle size.
+</Callout>
+
+
+### Hijack MetaMask or any Ethereum browser provider
+
+```ts
+import type { Chain } from 'viem'
+import { EthereumProvider, EvmConfig } from '@joyid/ethereum-provider'
+
+function hijackMetaMask(chains: Chain[], config: EvmConfig) {
+  const ethereum = new EthereumProvider(chains, joyidConfig)
+  ethereum.isMetaMask = true
+  setInterval(() => {
+    if (window.ethereum) {
+      window.ethereum = ethereum
+    }
+  }, 100)
+}
+```
+

@@ -1,5 +1,6 @@
 {
   "wagmi": "Wagmi",
   "rainbowkit": "RainbowKit",
-  "ethers": "Ethers.js"
+  "ethers": "Ethers.js",
+  "ethereum-provider": "Ethereum Provider"
 }

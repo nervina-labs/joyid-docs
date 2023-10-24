@@ -5,5 +5,6 @@
   "ethers": "@joyid/ethers",
   "nostr": "@joyid/nostr",
   "wagmi": "@joyid/wagmi",
-  "rainbowkit": "@joyid/rainbowkit"
+  "rainbowkit": "@joyid/rainbowkit",
+  "ethereum-provider": "@joyid/ethereum-provider"
 }
