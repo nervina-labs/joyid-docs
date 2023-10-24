@@ -1,6 +1,6 @@
 # JoyIDSigner
 
-`JoyIDSigner` is a subclass of [`ethers.Signer` ↗](https://docs.ethers.org/v5/api/signer/)
+`JoyIDSigner` is a subclass of [`ethers.Signer` ↗](https://docs.ethers.org/v5/api/signer/), all available methods are listed in the [Ethers.js docs ↗](https://docs.ethers.org/v5/api/signer/).
 
 ## Types
 

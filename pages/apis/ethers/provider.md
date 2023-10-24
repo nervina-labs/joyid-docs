@@ -1,6 +1,6 @@
 # JoyIDProvider
 
-`JoyIDProvider` is a subclass of [`ethers.providers.JsonRpcProvider` ↗](https://docs.ethers.org/v5/api/providers/jsonrpc-provider/).
+`JoyIDProvider` is a subclass of [`ethers.providers.JsonRpcProvider` ↗](https://docs.ethers.org/v5/api/providers/jsonrpc-provider/), all available methods are listed in the [Ethers.js docs ↗](https://docs.ethers.org/v5/api/providers/jsonrpc-provider/).
 
 ## Types
 

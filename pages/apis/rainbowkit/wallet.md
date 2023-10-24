@@ -2,6 +2,8 @@
 
 `JoyIdWallet` is a [Custom Wallet ↗](https://www.rainbowkit.com/docs/custom-wallets) that can be used with [RainbowKit](https://www.rainbowkit.com/).
 
+Note that `JoyIdWallet` does not need to specify `rpcURL` or `network` in the `EvmConig`, it will automatically handled by RainbowKit according to the `chains` you specified.
+
 ## Types
 
 - [`EvmConfig`](/apis/evm/init-config#evmconfig)
