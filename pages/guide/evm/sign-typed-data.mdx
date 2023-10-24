@@ -1,0 +1,320 @@
+# Sign Typed data
+
+JoyID implements the [EIP-712 ↗](https://eips.ethereum.org/EIPS/eip-712) standard for typed data signing. This allows users to sign a message that is human readable and can be verified on-chain. The `TypedData` struct is serialized and hashed to create the message that is signed.
+
+The `TypedData` struct is defined as [`abitype` ↗](https://abitype.dev/api/types#typeddata).
+
+## Signing
+
+You can sign a `TypedData` struct using the `signTypedData` function. This function takes a `TypedData` struct and returns a hex-encoded signature.
+
+import { FrameworkTabs } from '@/components/framework-tabs'
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```tsx filename="SignTypedData.tsx" /signTypedData/
+import * as React from "react";
+import { verifyTypedData, Hex } from "viem";
+import { signTypedData } from "@joyid/evm";
+import { sepolia } from "viem/chains";
+
+const buildTypedData = (chainId: number) => {
+  return {
+    domain: {
+      name: "Ether Mail",
+      version: "1",
+      chainId,
+      verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+    },
+    types: {
+      Person: [
+        { name: "name", type: "string" },
+        { name: "wallet", type: "address" },
+      ],
+      Mail: [
+        { name: "from", type: "Person" },
+        { name: "to", type: "Person" },
+        { name: "contents", type: "string" },
+      ],
+    },
+    primaryType: "Mail",
+    message: {
+      from: {
+        name: "Cow",
+        wallet: "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
+      },
+      to: {
+        name: "Bob",
+        wallet: "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB",
+      },
+      contents: "Hello, Bob!",
+    },
+  } as const;
+};
+
+export const SignTypedData = ({ address }: { address: Hex | null }) => {
+  const [signature, setSignature] = React.useState<Hex>("0x");
+  const chainId = sepolia.id;
+  const typedData = buildTypedData(chainId);
+  const onSign = async () => {
+    const sig = await signTypedData(typedData, address!);
+    setSignature(sig);
+  };
+  const onVerify = async () => {
+    try {
+      const res = await verifyTypedData({
+        ...typedData,
+        address: address!,
+        signature,
+      });
+      alert(res);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+  return address ? (
+    <div className="w-full">
+      <h2 className="mb-4 text-lg text-center">Sign Type Data</h2>
+      <label className="label">Signature:</label>
+      <textarea
+        className="textarea textarea-bordered w-full mb-4"
+        placeholder="Signature"
+        value={signature}
+        disabled
+      ></textarea>
+
+      <button className="btn btn-primary mb-4 mr-4" onClick={onSign}>
+        Sign
+      </button>
+
+      <button className="btn btn-primary btn-outline mb-4" onClick={onVerify}>
+        Verify
+      </button>
+
+      <div className="divider"></div>
+    </div>
+  ) : null;
+};
+
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="SignTypedData.vue" /signTypedData/
+<template>
+  <div v-if="address" class="w-full">
+    <h2 class="mb-4 text-lg text-center">Sign Type Data</h2>
+    <label class="label">Signature:</label>
+    <textarea
+      class="textarea textarea-bordered w-full mb-4"
+      placeholder="Signature"
+      v-model="signature"
+      disabled
+    ></textarea>
+
+    <button class="btn btn-primary mb-4 mr-4" @click="onSign">Sign</button>
+
+    <button class="btn btn-primary btn-outline mb-4" @click="onVerify">
+      Verify
+    </button>
+
+    <div class="divider"></div>
+  </div>
+</template>
+
+<script lang="ts">
+import { ref, toRefs, defineComponent } from "vue";
+import { sepolia } from "viem/chains";
+import { signTypedData } from "@joyid/evm";
+import { verifyTypedData } from "viem";
+
+function buildTypedData(chainId: number) {
+  return {
+    domain: {
+      name: "Ether Mail",
+      version: "1",
+      chainId,
+      verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+    },
+    types: {
+      Person: [
+        { name: "name", type: "string" },
+        { name: "wallet", type: "address" },
+      ],
+      Mail: [
+        { name: "from", type: "Person" },
+        { name: "to", type: "Person" },
+        { name: "contents", type: "string" },
+      ],
+    },
+    primaryType: "Mail",
+    message: {
+      from: {
+        name: "Cow",
+        wallet: "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
+      },
+      to: {
+        name: "Bob",
+        wallet: "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB",
+      },
+      contents: "Hello, Bob!",
+    },
+  };
+}
+
+export default defineComponent({
+  props: ["address"],
+  setup(props) {
+    const chainId = sepolia.id;
+    const typedData = buildTypedData(chainId);
+    const signature = ref("0x");
+
+    const onSign = async () => {
+      const sig = await signTypedData(typedData, props.address);
+      signature.value = sig;
+    };
+
+    const onVerify = async () => {
+      try {
+        const res = await verifyTypedData({
+          ...typedData,
+          address: props.address,
+          signature: signature.value,
+        });
+        alert(res);
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    return { signature, onSign, onVerify };
+  },
+});
+</script>
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+
+## Verify Typed Data
+
+Since the `TypedData` is signed using the EIP-712 standard, it can be verified using any EIP-712 compliant library.
+
+import { Tabs } from 'nextra/components'
+
+
+<Tabs items={['Ethers.js', 'Viem']}>
+  <Tabs.Tab>
+```ts /verifyTypedData/
+import { verifyTypedData } from 'ethers/lib/utils'
+import { signTypedData } from '@joyid/evm'
+
+function buildTypedData(chainId: number) {
+  return {
+    domain: {
+      name: "Ether Mail",
+      version: "1",
+      chainId,
+      verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+    },
+    types: {
+      Person: [
+        { name: "name", type: "string" },
+        { name: "wallet", type: "address" },
+      ],
+      Mail: [
+        { name: "from", type: "Person" },
+        { name: "to", type: "Person" },
+        { name: "contents", type: "string" },
+      ],
+    },
+    primaryType: "Mail",
+    message: {
+      from: {
+        name: "Cow",
+        wallet: "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
+      },
+      to: {
+        name: "Bob",
+        wallet: "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB",
+      },
+      contents: "Hello, Bob!",
+    },
+  };
+}
+
+const typedData = buildTypedData(1)
+
+function verify(address: string) {
+  const signature = await signTypedData(typedData, address);
+  const res = verifyTypedData(
+    typedData.domain,
+    typedData.types,
+    typedData.message,
+    signature,
+  )
+}
+```
+  </Tabs.Tab>
+  <Tabs.Tab>
+```ts /verifyTypedData/
+import { verifyTypedData } from 'viem'
+import { signTypedData } from '@joyid/evm'
+
+function buildTypedData(chainId: number) {
+  return {
+    domain: {
+      name: "Ether Mail",
+      version: "1",
+      chainId,
+      verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+    },
+    types: {
+      Person: [
+        { name: "name", type: "string" },
+        { name: "wallet", type: "address" },
+      ],
+      Mail: [
+        { name: "from", type: "Person" },
+        { name: "to", type: "Person" },
+        { name: "contents", type: "string" },
+      ],
+    },
+    primaryType: "Mail",
+    message: {
+      from: {
+        name: "Cow",
+        wallet: "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
+      },
+      to: {
+        name: "Bob",
+        wallet: "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB",
+      },
+      contents: "Hello, Bob!",
+    },
+  };
+}
+
+const typedData = buildTypedData(1)
+
+function verify(address: string) {
+  const signature = await signTypedData(typedData, address);
+  const res = verifyTypedData({
+    ...typedData,
+    address,
+    signature,
+  });
+}
+```
+  </Tabs.Tab>
+</Tabs>
+
+## Try it out
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+    <iframe width="800" height="800" src="https://codesandbox.io/p/sandbox/react-joyid-evm-sign-typed-data-3xq4h8?file=%2Fsrc%2Fsign-typed-data.tsx%3A16%2C25&embed=1" ></iframe>
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+    <iframe width="800" height="800" src="https://codesandbox.io/p/sandbox/vue-joyid-evm-sign-typed-data-khlyxk?file=%2Fsrc%2FApp.vue%3A16%2C1&embed=1" ></iframe>
+  </FrameworkTabs.Vue>
+</FrameworkTabs>

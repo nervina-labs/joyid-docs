@@ -1,0 +1,56 @@
+# Wagmi
+
+[Wagmi ↗](https://wagmi.sh/) is a collection of React Hooks containing everything you need to start working with Ethereum. wagmi makes it easy to "Connect Wallet," display ENS and balance information, sign messages, interact with contracts, and much more — all with caching, request deduplication, and persistence.
+
+JoyID can be used with wagmi as a [Wagmi Connector ↗](https://wagmi.sh/core/config#connectors-optional) by using the `@joyid/wagmi` package.
+
+## Installation
+
+Since `@joyid/wagmi` has a peer dependency on `wagmi`, and `wagmi` has a peer dependency on `viem`, you must have `wagmi` and `viem` installed.
+
+import { PackageManagerTabs } from '@/components/npm-tabs'
+
+<PackageManagerTabs command="install @joyid/wagmi wagmi viem" />
+
+
+
+## Usage
+
+Use JoyID with Wagmi is easy than you think, just need to create a new instance of `JoyIdConnector` and pass it to `WagmiConfig` component.
+
+```tsx filename="provider.tsx" /JoyIdConnector/
+import * as React from "react";
+import { WagmiConfig, createConfig, configureChains } from "wagmi";
+import { publicProvider } from "wagmi/providers/public";
+import { sepolia, polygonMumbai } from "wagmi/chains";
+import { JoyIdConnector } from "@joyid/wagmi";
+
+export const { chains, publicClient } = configureChains(
+  [sepolia, polygonMumbai],
+  [publicProvider()],
+);
+
+export const joyidConnector = new JoyIdConnector({
+  chains,
+  options: {
+    name: "JoyID demo",
+    logo: "https://fav.farm/🆔",
+    joyidAppURL: "https://testnet.joyid.dev",
+  },
+});
+
+const config = createConfig({
+  autoConnect: true,
+  publicClient,
+  connectors: [joyidConnector],
+});
+
+export const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
+  return <WagmiConfig config={config}>{children}</WagmiConfig>;
+};
+```
+
+
+### Try it out
+
+{<iframe style={{ marginTop: '2rem' }} width="800" height="800" src="https://codesandbox.io/p/sandbox/joyid-wagmi-demo-2y6lv4?file=%2Fsrc%2FApp.tsx%3A14%2C18&embed=1"></iframe>}

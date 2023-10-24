@@ -1,0 +1,94 @@
+# Ethers.js
+
+[Ethers.js ↗](https://github.com/ethers-io/ethers.js) is a complete and compact library for interacting with the Ethereum Blockchain and its ecosystem. JoyID can be used with Ethers.js as a Provider or a Signer to interact with the Ethereum Blockchain by using the `@joyid/ethers` package.
+
+import { Callout } from 'nextra/components'
+
+<Callout type="warning" emoji="⚠️">
+  `@joyid/ethers` only supports Ethers.js v5. If you are using Ethers.js v6, you may check [Ethers.js v4 ↗](/guide/evm/ethers-v4) for more information.
+</Callout>
+
+## Installation
+
+Since `@joyid/ethers` has a peer dependency on `ethers`, you must have `ethers` installed.
+
+
+import { PackageManagerTabs } from '@/components/npm-tabs'
+
+<PackageManagerTabs command="install @joyid/ethers ethers@5" />
+
+
+## Usage
+
+`@joyid/ethers` exports a `JoyIDProvider` and a `JoyIDSigner` that can be used with Ethers.js. `JoyIDProvider` is a subclass of [`ethers.providers.JsonRpcProvider` ↗](https://docs.ethers.org/v5/api/providers/jsonrpc-provider/) and `JoyIDSigner` is a subclass of [`ethers.Signer` ↗](https://docs.ethers.org/v5/api/signer/).
+
+import { Steps } from 'nextra/components'
+
+
+<Steps>
+### Connect to JoyID
+
+You may check the [Connect](/guide/evm/connect) for more information on how to connect to JoyID. Instead of importing `connect` from `@joyid/evm`, you should import it  directly from `@joyid/ethers`.
+
+### Create your provider
+
+```ts filename="provider.ts"  /JoyIDProvider/
+import { JoyIDProvider } from '@joyid/ethers'
+
+export function createProvider() {
+  const rpcURL = 'https://ethereum-sepolia.blockpi.network/v1/rpc/public'
+  const network = {
+    name: 'Sepolia',
+    chainId: 11155111,
+  }
+  const joyidConfig = {
+    rpcURL,
+    network,
+    name: "JoyID demo",
+    logo: "https://fav.farm/🆔",
+    joyidAppURL: "https://testnet.joyid.dev",
+  }
+  return new JoyIDProvider(
+    rpcURL,
+    network,
+    joyidConfig
+  )
+}
+```
+
+### Use provider to interact with the blockchain
+
+```ts
+import { createProvider } from './provider'
+
+// provider is a subclass of ethers.providers.JsonRpcProvider
+// more information: https://docs.ethers.io/v5/api/providers/jsonrpc-provider/
+const provider = createProvider()
+return provider.getBalance(address)
+```
+
+### Use signer to sign message/transactions
+
+
+```ts
+import { createProvider } from './provider'
+
+const provider = createProvider()
+const signer = provider.getSigner()
+const message = 'Hello JoyID!'
+// signer is a subclass of ethers.Signer
+// more information: https://docs.ethers.io/v5/api/signer/
+const signature = await signer.signMessage(message)
+```
+
+</Steps>
+
+
+## Caveats
+
+Since Sign Typed Data is experimental in Ethers.js v5, you may check [Sign Typed Data](/guide/evm/sign-typed-data) for more information on how to sign typed data. Instead of importing `signTypedData` from `@joyid/evm`, you should import it  directly from `@joyid/ethers`.
+
+
+## Demo
+
+For a complete demo, you may check [GitHub ↗](https://github.com/nervina-labs/joyid-evm-demo/tree/ethers) and [JoyID Ethers.js Demo ↗](https://joyid-evm-demo-git-ethers-nervina.vercel.app/) .

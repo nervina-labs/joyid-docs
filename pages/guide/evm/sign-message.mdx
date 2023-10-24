@@ -1,0 +1,184 @@
+# Sign Message
+
+JoyID implements the [EIP-191 ↗](https://eips.ethereum.org/EIPS/eip-191) standard for signing messages. This allows for a more secure way of signing messages, as it prevents the user from signing a message that they did not intend to sign.
+
+## Sign text message
+
+You can sign a message using the `signMessage` method. This method takes a `string` or `bytes` as a parameter and returns a hex-encoded signature.
+
+import { FrameworkTabs } from '@/components/framework-tabs'
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```tsx filename="SignMessage.tsx" /signMessage/
+import { Address } from 'viem'
+import { signMessage } from '@joyid/evm';
+
+interface Props {
+  address: Address | null;
+}
+
+const SignMessage = ({ address }: Props) => {
+  const [message, setMessage] = React.useState("Hello world");
+  const [signature, setSignature] = React.useState<Address>("0x");
+  const onSign = async () => {
+    const sig = await signMessage(message, address!);
+    setSignature(sig);
+  };
+
+  return address ? (
+    <div className="w-full">
+      <h2 className="mb-4 text-lg text-center">Sign Message</h2>
+      <label className="label">Message:</label>
+      <input
+        className="input input-bordered w-full mb-4"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+      />
+      <label className="label">Signature:</label>
+      <textarea
+        className="textarea textarea-bordered w-full mb-4"
+        placeholder="Signature"
+        value={signature}
+        disabled
+      ></textarea>
+
+      <button className="btn btn-primary mb-4 mr-4" onClick={onSign}>
+        Sign
+      </button>
+
+      <div className="divider"></div>
+    </div>
+  ) : null;
+};
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="SignMessage.vue" /signMessage/
+<template>
+  <div v-if="address" class="w-full">
+    <h2 class="mb-4 text-lg text-center">Sign Message</h2>
+    <label class="label">Message:</label>
+    <input class="input input-bordered w-full mb-4" v-model="message" />
+    <label class="label">Signature:</label>
+    <textarea
+      class="textarea textarea-bordered w-full mb-4"
+      placeholder="Signature"
+      v-model="signature"
+      disabled
+    ></textarea>
+
+    <button class="btn btn-primary mb-4 mr-4" @click="onSign">Sign</button>
+
+    <div class="divider"></div>
+  </div>
+</template>
+
+<script lang="ts">
+import { ref, toRefs } from "vue";
+import { signMessage } from "@joyid/evm";
+import { Hex } from "viem";
+
+export default {
+  props: ["address"],
+  setup(props) {
+    const { address } = toRefs(props);
+    const message = ref("Hello world");
+    const signature = ref<Hex>("0x");
+
+    const onSign = async () => {
+      const sig = await signMessage(message.value, address.value);
+      signature.value = sig;
+    };
+
+    const onVerify = async () => {
+      try {
+        const res = await verifyMessage({
+          message: message.value,
+          signature: signature.value,
+          address: address.value,
+        });
+        alert(res);
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    return { address, message, signature, onSign, onVerify };
+  },
+};
+</script>
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+## Sign bytes message
+
+Note that the `signMessage` method also accepts a `bytes` parameter. This allows you to sign any arbitrary data.  If the message is a string, it is signed as UTF-8 encoded bytes. It is not interpretted as a BytesLike; so the string "0x1234" is signed as six characters, not two bytes.
+
+To sign that example as two bytes, the `Uint8Array` should be used (i.e. `new Uint8Array([ 0x12, 0x34 ])`).
+
+If your message is a hex string, you should convert it to a `Uint8Array`.
+
+```ts /signMessage/
+import { toBytes } from 'viem'
+import { signMessage } from '@joyid/evm'
+
+function signHexMessage(message: string, address: Address) {
+  // message is a hex string, like "0x1234"
+  const bytes = toBytes(message);
+  return signMessage(bytes, address);
+}
+
+
+function signBytesMessage(message: Uint8Array, address: Address) {
+  // message is a Uint8Array, just pass it through
+  return signMessage(message, address);
+}
+```
+
+
+## Verify Message
+
+Since the message is signed using the EIP-191 standard, it can be verified using any EIP-191 compliant library.
+
+import { Tabs } from 'nextra/components'
+
+
+<Tabs items={['Ethers.js', 'Viem']}>
+  <Tabs.Tab>
+```ts /verifyMessage/
+import { verifyMessage } from 'ethers/lib/utils'
+
+function verify(message: string, address: string) {
+  const signature = await signMessage(message, address);
+  const res = verifyMessage(message, signature);
+}
+```
+  </Tabs.Tab>
+  <Tabs.Tab>
+```ts /verifyMessage/
+import { verifyMessage } from 'viem'
+
+function verify(message: string, address: string) {
+  const signature = await signMessage(message, address);
+  const res = verifyMessage({
+    message,
+    signature,
+    address,
+  });
+}
+```
+  </Tabs.Tab>
+</Tabs>
+
+## Try it out
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+    <iframe width="800" height="800" src="https://codesandbox.io/p/sandbox/react-joyid-evm-connect-forked-cxwyrj?file=%2Fsrc%2FApp.tsx%3A12%2C22&embed=1" ></iframe>
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+    <iframe width="800" height="800" src="https://codesandbox.io/p/sandbox/vue-joyid-evm-connect-forked-yf8gfm?file=%2Fsrc%2Fstyle.css%3A12%2C1-13%2C1&embed=1" ></iframe>
+  </FrameworkTabs.Vue>
+</FrameworkTabs>

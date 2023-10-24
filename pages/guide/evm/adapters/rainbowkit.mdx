@@ -1,0 +1,70 @@
+# RainbowKit
+
+[RainbowKit ↗](https://www.rainbowkit.com/) is a React library that makes it easy to add wallet connection to your dapp. It's intuitive, responsive and customizable. JoyID can be used as a [Custom Wallet ↗](https://www.rainbowkit.com/docs/custom-wallets) for RainbowKit by using `@joyid/rainbowkit` package.
+
+## Installation
+
+Since `@joyid/rainbowkit` has a peer dependency on `@rainbow-me/rainbowkit`, and `@rainbow-me/rainbowkit` has a peer dependency on `viem` and `wagmi`, you must have `wagmi`, `viem` and `@rainbow-me/rainbowkit` installed.
+
+import { PackageManagerTabs } from '@/components/npm-tabs'
+
+<PackageManagerTabs command="install @joyid/rainbowkit @rainbow-me/rainbowkit wagmi viem" />
+
+## Usage
+
+Use JoyID with RainbowKit is easy than you think, just need to import `JoyIdWallet` from `@joyid/rainbowkit` and pass it to `wallets` in `connectorsForWallets` function.
+
+```tsx filename="provider.tsx" /JoyIdWallet/
+import { WagmiConfig, createConfig, configureChains } from 'wagmi';
+import { publicProvider } from 'wagmi/providers/public';
+import { sepolia, polygonMumbai } from 'wagmi/chains';
+import {
+    connectorsForWallets,
+    RainbowKitProvider,
+} from '@rainbow-me/rainbowkit';
+import { JoyIdWallet } from '@joyid/rainbowkit'
+import { injectedWallet, coinbaseWallet } from '@rainbow-me/rainbowkit/wallets';
+import '@rainbow-me/rainbowkit/styles.css';
+
+export const { chains, publicClient } = configureChains(
+    [sepolia, polygonMumbai],
+    [publicProvider()]
+);
+
+const connectors = connectorsForWallets([
+    {
+        groupName: 'Recommended',
+        wallets: [
+            JoyIdWallet({
+                chains,
+                options: {
+                    name: 'JoyID RainbowKit demo',
+                    logo: 'https://fav.farm/🆔',
+                    joyidAppURL: 'https://testnet.joyid.dev',
+                },
+            }),
+            injectedWallet({ chains, shimDisconnect: true }),
+            coinbaseWallet({ chains, appName: 'JoyID Demo' }),
+            // rainbowWallet({ chains, shimDisconnect: true }),
+        ],
+    },
+]);
+
+const config = createConfig({
+    autoConnect: true,
+    publicClient,
+    connectors,
+});
+
+export const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
+    return (
+        <WagmiConfig config={config}>
+            <RainbowKitProvider chains={chains}>{children}</RainbowKitProvider>
+        </WagmiConfig>
+    );
+};
+```
+
+## Demo
+
+For a complete demo, you may check [GitHub ↗](https://github.com/nervina-labs/joyid-rainbow-kit-demo) and [JoyID RainbowKit Demo ↗](https://joyid-rainbow-kit-demo.vercel.app/) .

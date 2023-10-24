@@ -21,9 +21,9 @@ const logo = (
 
 const config: DocsThemeConfig = {
     project: {
-    link: 'https://github.com/nervina-labs/joyid'
+      link: 'https://github.com/nervina-labs/joyid-docs'
     },
-    docsRepositoryBase: 'https://github.com/nervina-labs/joyid/tree/main',
+    docsRepositoryBase: 'https://github.com/nervina-labs/joyid-docs/tree/main',
     useNextSeoProps() {
         const { asPath } = useRouter()
         if (asPath !== '/') {

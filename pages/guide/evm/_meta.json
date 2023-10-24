@@ -2,7 +2,6 @@
   "connect": "Connect",
   "sign-message": "Sign Message",
   "sign-typed-data": "Sign Typed Data",
-  "verify-message": "Verify Message",
   "send-transaction": "Send Transaction",
-  "adaptors": "Adaptors"
+  "adapters": "Adapters"
 }

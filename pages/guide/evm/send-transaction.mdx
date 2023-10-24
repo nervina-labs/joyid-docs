@@ -1,0 +1,136 @@
+# Send Transaction
+
+You can send a transaction to the network by calling the `sendTransaction` method. This method takes a `TransactionRequest` as a parameter.
+
+Note that `rpcURL` field must be set in the `initConfig` method, if your connected network is not Ethereum or Polygon.
+
+
+import { FrameworkTabs } from '@/components/framework-tabs'
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```tsx filename="SignMessage.tsx" /sendTransaction/
+import { Address, parseEther } from 'viem'
+import { sendTransaction } from '@joyid/evm';
+
+interface Props {
+  address: Address | null;
+}
+
+const SendTransaction = ({ address }: Props) => {
+  const [toAddress, setToAddress] = React.useState(
+    "0xA6eBeCE9938C3e1757bE3024D2296666d6F8Fc49",
+  );
+  const [amount, setAmount] = React.useState("0.01");
+  const onSign = async () => {
+    const value = parseEther(amount);
+    const txhash = await sendTransaction(
+      {
+        to: toAddress,
+        value: value.toString(),
+      },
+      address!,
+    );
+    alert(`tx hash: ${txhash}`);
+  };
+  return address ? (
+    <div className="w-full">
+      <h2 className="mb-4 text-lg text-center">Send Transaction</h2>
+      <label className="label">To Address:</label>
+      <input
+        className="input input-bordered w-full mb-4"
+        value={toAddress}
+        onChange={(e) => setToAddress(e.target.value)}
+      />
+      <label className="label">Amount:</label>
+      <input
+        className="input input-bordered w-full mb-4"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+      />
+      <button className="btn btn-primary" onClick={onSign}>
+        Send
+      </button>
+      <div className="divider"></div>
+    </div>
+  ) : null;
+};
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="SendTransaction.vue" /sendTransaction/
+<template>
+  <div v-if="address" class="w-full">
+    <h2 class="mb-4 text-lg text-center">Send Transaction</h2>
+    <label class="label">To Address:</label>
+    <input class="input input-bordered w-full mb-4" v-model="toAddress" />
+    <label class="label">Amount:</label>
+    <input class="input input-bordered w-full mb-4" v-model="amount" />
+    <button class="btn btn-primary" @click="onSign">Send</button>
+    <div class="divider"></div>
+  </div>
+</template>
+
+<script lang="ts">
+import { ref, toRefs } from "vue";
+import { parseEther } from "viem";
+import { sendTransaction } from "@joyid/evm";
+
+export default {
+  props: ["address"],
+  setup(props) {
+    const { address } = toRefs(props);
+    const toAddress = ref("0xA6eBeCE9938C3e1757bE3024D2296666d6F8Fc49");
+    const amount = ref("0.01");
+
+    const onSign = async () => {
+      const value = parseEther(amount.value);
+      const txhash = await sendTransaction(
+        {
+          to: toAddress.value,
+          value: value.toString(),
+        },
+        address.value,
+      );
+      alert(`tx hash: ${txhash}`);
+    };
+
+    return { address, toAddress, amount, onSign };
+  },
+};
+</script>
+
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+## Sign Transaction
+
+If you prefer to sign a transaction but not send it to the network, you can use the `signTransaction` method. `signTransaction` method takes a `TransactionRequest` as a parameter and returns a signed serialized transaction.
+
+```tsx filename="SignTransaction.tsx" /signTransaction/
+import { signTransaction } from '@joyid/evm'
+
+function signTx(address) {
+  const tx = await signTransaction(
+    {
+      to: '0xA6eBeCE9938C3e1757bE3024D2296666d6F8Fc49',
+      value: '10000000000000000',
+    },
+    address,
+  )
+  // you can call rpc method `eth_sendRawTransaction` to send the transaction to the network:
+  // await walletClient.sendRawTransaction(tx)
+}
+```
+
+## Try it out
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+    <iframe width="800" height="800" src="https://codesandbox.io/p/sandbox/react-joyid-evm-send-transaction-83hjjy?file=%2Fsrc%2FApp.tsx%3A12%2C22&embed=1" ></iframe>
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+    <iframe width="800" height="800" src="https://codesandbox.io/p/sandbox/vue-joyid-evm-send-transaction-8tp5dz?file=%2Fsrc%2FApp.tsx%3A12%2C22&embed=1" ></iframe>
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
