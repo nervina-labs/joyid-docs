@@ -1,151 +1,73 @@
-import { Sandpack, SandpackProps, SandpackOptions } from '@codesandbox/sandpack-react'
-import { Component } from 'react'
-import { Callout } from 'nextra/components'
+'use client';
+import { memo, Suspense, useState, useEffect } from 'react'
+import type { SandboxProps } from './sandbox-root'
+import dynamic from "next/dynamic";
 
-export interface SandboxProps extends SandpackProps {
-  documentTitle?: string
-  initConfigPackage?: string
-  id?: string
-}
-
-const buildHtmlFile = (temaplte?: string, documentTitle?: string) => {
-  if (temaplte === 'react-ts') {
-    return `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${documentTitle || 'JoyID Demo'}</title>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.2/dist/full.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>`
-  }
-  return `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${documentTitle || 'JoyID Demo'}</title>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.2/dist/full.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <div id="app"></div>
-  </body>
-</html>`
-}
-
-const stylesCssFile = `h1 {
-  word-break: break-all;
-}
-
-#app,
-#root {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 1rem;
-}`
-
-const buildReactIndexFile = (npm: string) => {
-  return `import React from "react";
-import ReactDOM from "react-dom/client";
-import { initConfig } from "${npm}";
-import App from "./App";
-import "./styles.css";
-
-initConfig({
-  name: "JoyID demo",
-  logo: "https://fav.farm/🆔",
-  joyidAppURL: "https://testnet.joyid.dev",
+const SandpackRoot = dynamic(() => import('./sandbox-root'), {
+  ssr: true,
 });
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+const SandpackGlimmer = ({ code }: { code: string }) => (
+  <div className="sandpack sandpack--playground my-8">
+    <div className="sp-wrapper">
+      <div className="shadow-lg dark:shadow-lg-dark rounded-lg">
+        <div className="bg-wash h-10 dark:bg-card-dark flex justify-between items-center relative z-10 border-b border-border dark:border-border-dark rounded-t-lg rounded-b-none">
+          <div className="px-4 lg:px-6">
+            <div className="sp-tabs"></div>
+          </div>
+          <div className="px-3 flex items-center justify-end grow text-right"></div>
+        </div>
+        <div className="sp-layout min-h-[216px] flex items-stretch flex-wrap">
+          <div className="sp-stack sp-editor max-h-[406px] h-auto overflow-auto">
+            <div className="sp-code-editor">
+              <div className="sp-cm sp-pristine">
+                <div className="cm-editor">
+                  <div>
+                    <div className="cm-gutters ps-9 sticky min-h-[192px]">
+                      <div className="cm-gutter cm-lineNumbers whitespace-pre sp-pre-placeholder">
+                        {code}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="sp-stack order-last xl:order-2 max-h-[406px] h-auto">
+            <div className="p-0 sm:p-2 md:p-4 lg:p-8 bg-card dark:bg-wash-dark h-full relative rounded-b-lg lg:rounded-b-none overflow-auto"></div>
+          </div>
+          {code?.split('\n').length > 16 && (
+            <div className="flex h-[45px] text-base justify-between dark:border-card-dark bg-wash dark:bg-card-dark items-center z-10 rounded-t-none p-1 w-full order-2 xl:order-last border-b-1 relative top-0"></div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
 );
-`
-}
 
-const buildVueIndexFile = (npm: string) => {
-  return `import { createApp } from 'vue'
-import App from './App.vue'
-import { initConfig } from "${npm}";
-import "./styles.css";
+export const Sandbox = memo(function SandpackWrapper(props: SandboxProps): any {
+  // const codeSnippet = createFileMap(Children.toArray(props.children));
 
-initConfig({
-  name: "JoyID demo",
-  logo: "https://fav.farm/🆔",
-  joyidAppURL: "https://testnet.joyid.dev",
-});
+  // To set the active file in the fallback we have to find the active file first.
+  // If there are no active files we fallback to App.js as default.
+  // let activeCodeSnippet = Object.keys(codeSnippet).filter(
+  //   (fileName) =>
+  //     codeSnippet[fileName]?.active === true &&
+  //     codeSnippet[fileName]?.hidden === false
+  // );
+  // let activeCode;
+  // if (!activeCodeSnippet.length) {
+  //   activeCode = codeSnippet['/App.js'].code;
+  // } else {
+  //   activeCode = codeSnippet[activeCodeSnippet[0]].code;
+  // }
 
-createApp(App).mount('#app')
-`
-}
+  const { files = {} } = props
+  const activeCode = files[Object.keys(files)[0]]
 
-export const SandboxImpl: React.FC<SandboxProps> = (props) => {
-  const { template, documentTitle, initConfigPackage, files: _files, id, options: _options, ...restProps } = props
-  const htmlFile = buildHtmlFile(template, documentTitle)
-  const files: Record<string, string> = {
-    '/public/index.html': htmlFile,
-    ..._files,
-  }
-  const options: SandpackOptions = {
-    initMode: "user-visible",
-    editorHeight: 500,
-    externalResources: ["https://cdn.tailwindcss.com", 'https://cdn.jsdelivr.net/npm/daisyui@3.9.3/dist/full.css'],
-    ..._options,
-  }
-  if (template === 'react-ts') {
-    files['/styles.css'] = stylesCssFile
-    if (initConfigPackage) {
-      files['/index.tsx'] = buildReactIndexFile(initConfigPackage)
-    }
-    if (!options?.activeFile) {
-      options.activeFile = '/App.tsx'
-    }
-    options.visibleFiles = ["/App.tsx", "/index.tsx"].concat(options.visibleFiles || [])
-  } else if (template === 'vue-ts') {
-    files['/src/styles.css'] = stylesCssFile
-    if (initConfigPackage) {
-      files['/src/main.ts'] = buildVueIndexFile(initConfigPackage)
-    }
-    if (!options.activeFile) {
-      options.activeFile = '/src/App.vue'
-    }
-    options.visibleFiles = ["/src/App.vue", "/src/main.ts"].concat(options.visibleFiles || [])
-  }
-  if (id) {
-    options.id = id
-  }
-
-  return <Sandpack theme="dark" template={template} files={files} options={options} {...restProps} />
-}
-
-
-export class Sandbox extends Component<SandboxProps> {
-  state = { hasError: false }
-
-  static getDerivedStateFromError() {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true };
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return <Callout type="error" emoji="️🚫">
-        CodeSandbox encountered an error while rendering this demo. Please refresh the page and try again.
-      </Callout>
-    }
-    return <SandboxImpl {...this.props} />
-  }
-}
+  return (
+    <Suspense fallback={<SandpackGlimmer code={typeof activeCode === 'string' ? activeCode : activeCode?.code} />}>
+      <SandpackRoot {...props} />
+    </Suspense>
+  );
+})

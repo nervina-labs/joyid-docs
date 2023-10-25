@@ -1,4 +1,4 @@
-import { Tabs, Tab } from 'nextra/components';
+import { Tabs, Tab } from '@/components/tabs';
 import { ReactIcon } from './icons/react';
 import { VueIcon } from './icons/vue';
 
@@ -41,10 +41,10 @@ export function FrameworkTabs({
 
 // eslint-disable-next-line react/display-name
 FrameworkTabs.React = ({ children }: React.PropsWithChildren<any>) => {
-  return <Tab key='react'>{children}</Tab>
+  return <Tab key='react' value="0">{children}</Tab>
 }
 
 // eslint-disable-next-line react/display-name
 FrameworkTabs.Vue = ({ children }: React.PropsWithChildren<any>) => {
-  return <Tab key='react'>{children}</Tab>
+  return <Tab key='vue' value="1">{children}</Tab>
 }
