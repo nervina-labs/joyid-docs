@@ -8,6 +8,9 @@ dependencies:
   '@vercel/og':
     specifier: ^0.5.20
     version: 0.5.20
+  clsx:
+    specifier: ^2.0.0
+    version: 2.0.0
   daisyui:
     specifier: ^3.9.3
     version: 3.9.3
