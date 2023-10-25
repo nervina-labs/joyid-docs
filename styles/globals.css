@@ -5,3 +5,7 @@
 html.light nav {
   color: rgb(15 23 42);
 }
+
+html.light .bg-base-100 {
+  background-color: #fff;
+}

@@ -1,0 +1,89 @@
+# `initConfig`
+
+`initConfig` is a function that init the configuration for the JoyID SDK. You should call config function in your app's entry file to set the configuration.
+
+After init the config, all the following functions will use the config as default value:
+
+- [connect()](/apis/ckb/connect)
+- [signMessage()](/apis/ckb/sign)
+- [signTransaction()](/apis/ckb/sign-tx)
+- [signCotaNFTTx()](/apis/ckb/sign-cota-nft)
+
+## Types
+
+```typescript
+function initConfig(config?: DappConfig): DappConfig
+
+interface DappConfig {
+  /**
+   * The name of your app
+   */
+  name?: string
+  /**
+   * The logo of your app
+   */
+  logo?: string
+  /**
+   * The RPC URL of the ckb node that your app is using
+   */
+  rpcURL?: string
+  /**
+   * The network that your app is using, defaults to JoyID ckb testnet
+   */
+  network?: 'mainnet' | 'testnet'
+  /**
+   * The URL of JoyID app url that your app is integrated with, defaults to https://app.joyid.dev
+   */
+  joyidAppURL?: string
+  /**
+   * The URL of JoyID server url that your app is integrated with
+   */
+  joyidServerURL?: string
+}
+```
+
+## Example
+
+import { FrameworkTabs } from '@/components/framework-tabs'
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```ts filename="main.tsx" /initConfig/
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { initConfig } from "@joyid/ckb";
+import App from "./App";
+import "./index.css";
+
+initConfig({
+  name: "JoyID demo",
+  logo: "https://fav.farm/🆔",
+  joyidAppURL: "https://testnet.joyid.dev",
+});
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```ts filename="main.ts" /initConfig/
+import { createApp } from "vue";
+import "./style.css";
+import App from "./App.vue";
+import { initConfig } from "@joyid/ckb";
+
+initConfig({
+  name: "JoyID demo",
+  logo: "https://fav.farm/🆔",
+  joyidAppURL: "https://testnet.joyid.dev",
+});
+
+createApp(App).mount("#app");
+```
+
+  </FrameworkTabs.Vue>
+</FrameworkTabs>

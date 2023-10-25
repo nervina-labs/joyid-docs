@@ -1,7 +1,7 @@
 {
+  "init-config": "initConfig",
   "connect": "connect",
   "sign": "signChallenge",
   "sign-tx": "signTransaction",
-  "sign-cota": "signCotaNFTTx",
-  "init-config": "initConfig"
+  "sign-cota": "signCotaNFTTx"
 }

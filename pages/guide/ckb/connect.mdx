@@ -1,1 +1,163 @@
 # Connect
+
+Connect your dapp with the JoyID which enables your dapp to interact with its users' Nervos CKB accounts. Nervos CKB is a public permissionless blockchain and the layer 1 of Nervos. See [Nervos Docs ↗](https://docs.nervos.org/) for more details.
+
+In this integration guide, we will use `@joyid/ckb` SDK to connect to JoyID wallet with Nervos CKB network.
+
+## Initialization
+
+Before writing business code, you can call the initialization function `initConfig` on the project entry:
+
+import { FrameworkTabs } from '@/components/framework-tabs'
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```ts filename="main.tsx" /initConfig/
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { initConfig } from "@joyid/ckb";
+import App from "./App";
+import "./index.css";
+
+initConfig({
+  name: "JoyID demo",
+  logo: "https://fav.farm/🆔",
+  joyidAppURL: "https://testnet.joyid.dev",
+});
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```ts filename="main.ts" /initConfig/
+import { createApp } from "vue";
+import "./style.css";
+import App from "./App.vue";
+import { initConfig } from "@joyid/ckb";
+
+initConfig({
+  name: "JoyID demo",
+  logo: "https://fav.farm/🆔",
+  joyidAppURL: "https://testnet.joyid.dev",
+});
+
+createApp(App).mount("#app");
+```
+
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+
+### Get Started
+
+Let's start the journey of business code programming. Suppose you have the following code:
+
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```ts filename="App.tsx"
+import * as React from 'react'
+import './style.css'
+
+export default function App() {
+  return (
+    <div>
+      <h1>Hello JoyID!</h1>
+    </div>
+  )
+}
+
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="App.vue"
+<template>
+  <div id="app">
+    <h1>Hello JoyID!</h1>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App',
+}
+</script>
+```
+
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+
+To connect with JoyID, we just need to add a `button` element and listen to the `onClick` event:
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```ts filename="App.tsx" /connect/
+import * as React from 'react'
+import { connect } from '@joyid/ckb'
+import './style.css'
+
+export default function App() {
+  const onConnect = async () => {
+    try {
+      const authData = await connect()
+      console.log(`JoyID user info:`, authData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return (
+    <div>
+      <h1>Hello JoyID!</h1>
+      <button onClick={onConnect}>Connect JoyID</button>
+    </div>
+  )
+}
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="App.vue" /connect/
+<template>
+  <div id="app">
+    <h1>Hello JoyID!</h1>
+    <button @click="connect">Connect JoyID</button>
+  </div>
+</template>
+
+<script>
+import { connect } from '@joyid/ckb'
+
+export default {
+  name: 'App',
+  methods: {
+    async connect() {
+      try {
+        const authData = await connect()
+        console.log(`JoyID user info:`, authData)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+  },
+}
+```
+
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+## Try it out
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+    <iframe width="800" height="800" src="https://stackblitz.com/edit/react-joyid-ckb-connect?embed=1&file=App.tsx&view=preview" />
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+    <iframe width="800" height="800" src="https://stackblitz.com/edit/vue-joyid-ckb-connect?embed=1&file=App.vue&view=preview" />
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
