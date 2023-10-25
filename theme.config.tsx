@@ -28,7 +28,7 @@ const config: DocsThemeConfig = {
         const { asPath } = useRouter()
         if (asPath !== '/') {
             return {
-                titleTemplate: '%s – JoyID Docs',
+                titleTemplate: '%s - JoyID Docs',
             }
         }
     },
@@ -61,10 +61,10 @@ const config: DocsThemeConfig = {
                 <meta name="twitter:url" content="https://docs.joyi.id" />
                 <meta
                     name="og:title"
-                    content={title ? title + ' – JoyID Docs' : 'JoyID Docs'}
+                    content={title ? title + ' - JoyID Docs' : 'JoyID Docs'}
                 />
                 <meta name="og:image" content={socialCard} />
-                <meta name="apple-mobile-web-app-title" content="JoyID Docu" />
+                <meta name="apple-mobile-web-app-title" content="JoyID Docs" />
                 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
                 <link rel="icon" href="/favicon.png" type="image/png" />
                 <link
