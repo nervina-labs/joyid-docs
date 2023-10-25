@@ -38,8 +38,8 @@ const config: DocsThemeConfig = {
         const { route } = useRouter()
         const socialCard =
             route === '/' || !title
-                ? 'https://nextra.site/og.jpeg'
-                : `https://nextra.site/api/og?title=${title}`
+                ? 'https://docs.joy.id/api/og?title=Documentation'
+                : `https://docs.joy.id/api/og?title=${title}`
 
         return (
             <>
