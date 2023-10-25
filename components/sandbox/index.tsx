@@ -1,4 +1,6 @@
 import { Sandpack, SandpackProps, SandpackOptions } from '@codesandbox/sandpack-react'
+import { Component } from 'react'
+import { Callout } from 'nextra/components'
 
 export interface SandboxProps extends SandpackProps {
   documentTitle?: string
@@ -37,12 +39,7 @@ const buildHtmlFile = (temaplte?: string, documentTitle?: string) => {
 </html>`
 }
 
-const stylesCssFile = `h1,
-p {
-  font-family: Lato;
-}
-
-h1 {
+const stylesCssFile = `h1 {
   word-break: break-all;
 }
 
@@ -95,7 +92,7 @@ createApp(App).mount('#app')
 `
 }
 
-export const Sandbox: React.FC<SandboxProps> = (props) => {
+export const SandboxImpl: React.FC<SandboxProps> = (props) => {
   const { template, documentTitle, initConfigPackage, files: _files, id, options: _options, ...restProps } = props
   const htmlFile = buildHtmlFile(template, documentTitle)
   const files: Record<string, string> = {
@@ -132,4 +129,23 @@ export const Sandbox: React.FC<SandboxProps> = (props) => {
   }
 
   return <Sandpack theme="dark" template={template} files={files} options={options} {...restProps} />
+}
+
+
+export class Sandbox extends Component<SandboxProps> {
+  state = { hasError: false }
+
+  static getDerivedStateFromError() {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <Callout type="error" emoji="️🚫">
+        CodeSandbox encountered an error while rendering this demo. Please refresh the page and try again.
+      </Callout>
+    }
+    return <SandboxImpl {...this.props} />
+  }
 }
