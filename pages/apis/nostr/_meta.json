@@ -1,3 +1,6 @@
 {
-  "nostr": "nostr"
+  "nostr": "nostr",
+  "init-config": "initConfig",
+  "logout": "logout",
+  "get-connected-pubkey": "getConnectedPubkey"
 }

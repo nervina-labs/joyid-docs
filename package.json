@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@codesandbox/sandpack-react": "^2.9.0",
     "@vercel/og": "^0.5.20",
     "clsx": "^2.0.0",
     "daisyui": "^3.9.3",

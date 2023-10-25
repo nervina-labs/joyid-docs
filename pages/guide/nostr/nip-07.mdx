@@ -1,0 +1,653 @@
+## NIP-07
+
+In this integration guide, we will use `joyid/nostr` SDK to connect to JoyID wallet with [NIP-07 ↗](https://github.com/nostr-protocol/nips/blob/master/07.md) protocol. NIP-07 is a simple protocol that allows a dapp to connect to a wallet and request a signature from the wallet.
+
+import { Callout } from 'nextra/components'
+
+<Callout type="error" emoji="️🚫">
+JoyID has currently only implemented the basic methods of NIP-07: `getPublicKey()` and `signEvent()`. It has not yet implemented [NIP-04](https://github.com/nostr-protocol/nips/blob/master/04.md), which means that `encrypt()`, `decrypt()` cannot be used.
+</Callout>
+
+## Installation
+
+import { PackageManagerTabs } from '@/components/npm-tabs'
+
+<PackageManagerTabs command="install @joyid/nostr" />
+
+## Initialization
+
+Before writing business code, you can call the initialization function `initConfig` on the project entry file:
+
+import { FrameworkTabs } from '@/components/framework-tabs'
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```ts filename="main.tsx" /initConfig/
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { initConfig } from "@joyid/nostr";
+import App from "./App";
+import "./index.css";
+
+initConfig({
+  name: "JoyID demo",
+  logo: "https://fav.farm/🆔",
+  joyidAppURL: "https://testnet.joyid.dev",
+});
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```ts filename="main.ts" /initConfig/
+import { createApp } from "vue";
+import "./style.css";
+import App from "./App.vue";
+import { initConfig } from "@joyid/nostr";
+
+initConfig({
+  name: "JoyID demo",
+  logo: "https://fav.farm/🆔",
+  joyidAppURL: "https://testnet.joyid.dev",
+});
+
+createApp(App).mount("#app");
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+
+## Get Nostr public key from JoyID
+
+After the initialization is completed, you can call the `nostr.getPublicKey()` function to connect to JoyID wallet:
+
+<Callout emoji="💡">
+After a successful connection, JoyID persists the connection status to the local storage.
+</Callout>
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```tsx filename="App.tsx" /nostr.getPublicKey/
+import { nostr } from '@joyid/nostr'
+
+export default function App() {
+  const [pubkey, setPubkey] = React.useState<string | null>();
+  const onConnect = async () => {
+    try {
+      const res = await nostr.getPublicKey();
+      setPubkey(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div id="app">
+      <button className="btn btn-primary" onClick={onConnect}>
+        Connect JoyID
+      </button>
+    </div>
+  );
+}
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="App.vue" /nostr.getPublicKey/
+<template>
+  <div id="app">
+    <button class="btn btn-primary" @click="onConnect">Connect JoyID</button>
+  </div>
+</template>
+
+<script>
+import { ref } from 'vue'
+import { nostr } from '@joyid/nostr'
+
+export default {
+  setup() {
+    const pubkey = ref(null)
+
+    const onConnect = async () => {
+      try {
+        const res = await nostr.getPublicKey();
+        pubkey.value = res
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    return {
+      pubkey,
+      onConnect,
+    }
+  },
+}
+</script>
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+
+
+## Logout
+
+You can call the `logout` function to disconnect from JoyID. `logout` function clear the connection status from local storage.
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```tsx filename="App.tsx" /logout/
+import { nostr, logout } from '@joyid/nostr'
+
+export default function App() {
+  const [pubkey, setPubkey] = React.useState<string | null>();
+  const onConnect = async () => {
+    try {
+      const res = await nostr.getPublicKey();
+      setPubkey(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div id="app">
+      {pubkey ? (
+        <>
+          <h1 className="text-xl mb-4">{`Connected: ${address}`}</h1>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              logout();
+              setPubkey(null);
+            }}
+          >
+            Logout
+          </button>
+          <div className="divider" />
+        </>
+      ) : (
+        <button className="btn btn-primary" onClick={onConnect}>
+          Connect JoyID
+        </button>
+      )}
+    </div>
+  );
+}
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="App.vue" /logout/
+<template>
+  <div id="app">
+    <button class="btn btn-primary" v-if="!pubkey" @click="onConnect">
+      Connect JoyID
+    </button>
+    <div v-else>
+      <h1 class="text-xl mb-4">{{`Connected: ${pubkey}`}}</h1>
+      <button class="btn btn-primary" @click="onLogout">Logout</button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { ref } from 'vue'
+import { nostr, logout } from '@joyid/nostr'
+
+export default {
+  setup() {
+    const pubkey = ref(null)
+
+    const onConnect = async () => {
+      try {
+        const res = await nostr.getPublicKey();
+        pubkey.value = res
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    const onLogout = () => {
+      logout();
+      pubkey.value = null;
+    }
+
+    return {
+      pubkey,
+      onConnect,
+      onLogout,
+    }
+  },
+}
+</script>
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+
+## Get connected pubkey
+
+After connecting to JoyID, user may refresh the page or close the browser. You can call the `getConnectedPubkey` function to get the connected pubkey, `getConnectedPubkey` function get the connected pubkey from local storage.
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```tsx filename="App.tsx" /getConnectedPubkey/
+import { nostr, logout, getConnectedPubkey } from '@joyid/nostr'
+export default function App() {
+  const [pubkey, setPubkey] = React.useState<string | null>(
+    getConnectedPubkey(),
+  );
+  const onConnect = async () => {
+    try {
+      const res = await nostr.getPublicKey();
+      setPubkey(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div id="app">
+      {pubkey ? (
+        <>
+          <h1 className="text-xl mb-4">{`Connected: ${pubkey}`}</h1>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              logout();
+              setPubkey(null);
+            }}
+          >
+            Disconnect
+          </button>
+          <div className="divider" />
+        </>
+      ) : (
+        <button className="btn btn-primary" onClick={onConnect}>
+          Connect JoyID
+        </button>
+      )}
+    </div>
+  );
+}
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="App.vue" /getConnectedPubkey/
+<template>
+  <div id="app">
+    <button v-if="!pubkey" class="btn btn-primary" @click="onConnect">
+      Connect JoyID
+    </button>
+    <div v-else>
+      <h1 class="text-xl mb-4">{{`Connected: ${pubkey}`}}</h1>
+      <button class="btn btn-primary" @click="onLogout">Disconnect</button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { ref, onMounted } from 'vue'
+import { nostr, logout, getConnectedPubkey } from '@joyid/nostr'
+
+export default {
+  setup() {
+    const pubkey = ref(getConnectedPubkey())
+
+    const onConnect = async () => {
+      try {
+        const res = await nostr.getPublicKey();
+        pubkey.value = res
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    const onLogout = () => {
+      logout();
+      pubkey.value = null;
+    }
+
+    return {
+      pubkey,
+      onConnect,
+      onLogout,
+    }
+  },
+}
+</script>
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+## Sign Event
+
+After connecting to JoyID, you can call the `nostr.signEvent` function to sign the event. The `nostr.signEvent` function will open the JoyID app and wait for the user to confirm the signature.
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+
+```tsx filename="SignEvent.tsx" /nostr.signEvent/
+import { nostr, Event } from "@joyid/nostr";
+import { getBlankEvent, verifySignature } from "nostr-tools";
+interface Props {
+  address: string | null;
+}
+
+const blankEvent = getBlankEvent() as Event<number>;
+
+blankEvent.content = Math.random().toString();
+
+const SignEvent = ({ address }: Props) => {
+  const [event, setEvent] = React.useState<Event>(blankEvent);
+  const onSign = async () => {
+    const signedEvent = await nostr.signEvent(blankEvent);
+    setEvent(signedEvent);
+  };
+  const onVerify = async () => {
+    try {
+      const res = verifySignature(event);
+      alert(res);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+  return address ? (
+    <div className="w-full">
+      <h2 className="mb-4 text-lg text-center">Sign Event</h2>
+      <label className="label">Event:</label>
+      <textarea
+        className="textarea textarea-bordered w-full h-60 mb-4"
+        placeholder="Signature"
+        value={JSON.stringify(event, null, 4)}
+        disabled
+      ></textarea>
+
+      <button className="btn btn-primary mb-4 mr-4" onClick={onSign}>
+        Sign
+      </button>
+
+      <button className="btn btn-primary btn-outline mb-4" onClick={onVerify}>
+        Verify
+      </button>
+
+      <div className="divider"></div>
+    </div>
+  ) : null;
+};
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="SignEvent.vue" /nostr.signEvent/
+<template>
+  <div v-if="address" class="w-full">
+    <h2 class="mb-4 text-lg text-center">Sign Event</h2>
+    <label class="label">Event:</label>
+    <textarea class="textarea textarea-bordered w-full h-60 mb-4" placeholder="Signature" v-model="event" disabled></textarea>
+    <button class="btn btn-primary mb-4 mr-4" @click="onSign">Sign</button>
+    <button class="btn btn-primary btn-outline mb-4" @click="onVerify">Verify</button>
+
+    <div class="divider"></div>
+  </div>
+</template>
+
+<script lang="ts">
+import { ref } from 'vue'
+import { nostr, Event } from '@joyid/nostr'
+import { getBlankEvent, verifySignature } from 'nostr-tools'
+
+const blankEvent = getBlankEvent() as Event<number>;
+blankEvent.content = Math.random().toString();
+
+export default {
+  props: ["address"],
+  setup() {
+    const event = ref(blankEvent);
+
+    const onSign = async () => {
+      const signedEvent = await nostr.signEvent(blankEvent);
+      event.value = signedEvent;
+    };
+
+    const onVerify = async () => {
+      try {
+        const res = verifySignature(event.value);
+        alert(res);
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    return {
+      event,
+      onSign,
+      onVerify,
+    };
+  },
+}
+</script>
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+
+## Try it out
+
+import { Sandbox } from '@/components/sandbox'
+
+export const appTsxFile = `import * as React from "react";
+import { nostr, logout, Event, getConnectedPubkey } from "@joyid/nostr";
+import { getBlankEvent, verifySignature } from "nostr-tools";
+
+interface Props {
+  pubkey: string | null;
+}
+
+const blankEvent = getBlankEvent() as Event<number>;
+
+blankEvent.content = Math.random().toString();
+
+const SignEvent = ({ pubkey }: Props) => {
+  const [event, setEvent] = React.useState<Event>(blankEvent);
+  const onSign = async () => {
+    const signedEvent = await nostr.signEvent(blankEvent);
+    setEvent(signedEvent);
+  };
+  const onVerify = async () => {
+    try {
+      const res = verifySignature(event);
+      alert(res);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+  return pubkey ? (
+    <div className="w-full">
+      <h2 className="mb-4 text-lg text-center">Sign Event</h2>
+      <label className="label">Event:</label>
+      <textarea
+        className="textarea textarea-bordered w-full h-60 mb-4"
+        placeholder="Signature"
+        value={JSON.stringify(event, null, 4)}
+        disabled
+      ></textarea>
+
+      <button className="btn btn-primary mb-4 mr-4" onClick={onSign}>
+        Sign
+      </button>
+
+      <button className="btn btn-primary btn-outline mb-4" onClick={onVerify}>
+        Verify
+      </button>
+
+      <div className="divider"></div>
+    </div>
+  ) : null;
+};
+
+export default function App() {
+  const [pubkey, setPubkey] = React.useState<string | null>(
+    getConnectedPubkey(),
+  );
+  const onConnect = async () => {
+    try {
+      const res = await nostr.getPublicKey();
+      setPubkey(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div id="app">
+      {pubkey ? (
+        <>
+          <h1 className="text-xl mb-4">{\`Connected: \${pubkey}\`}</h1>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              logout();
+              setPubkey(null);
+            }}
+          >
+            Disconnect
+          </button>
+          <div className="divider" />
+        </>
+      ) : (
+        <button className="btn btn-primary" onClick={onConnect}>
+          Connect JoyID
+        </button>
+      )}
+      {pubkey ? <SignEvent pubkey={pubkey} /> : null}
+    </div>
+  );
+}`
+
+export const appVueFile = `<template>
+  <div id="app">
+    <div v-if="pubkey">
+      <h1 class="text-xl mb-4">Connected: {{pubkey}}</h1>
+      <button class="btn btn-primary" @click="disconnect">Disconnect</button>
+      <div class="divider" />
+      <SignEvent :address="pubkey" />
+    </div>
+    <button v-else class="btn btn-primary" @click="onConnect">
+      Connect JoyID
+    </button>
+  </div>
+</template>
+
+<script lang="ts">
+import { ref } from "vue";
+import { nostr, logout, getConnectedPubkey } from "@joyid/nostr";
+import SignEvent from "./SignEvent.vue";
+
+export default {
+  components: { SignEvent },
+  setup() {
+    const pubkey = ref<string | null>(getConnectedPubkey());
+
+    const onConnect = async () => {
+      try {
+        const res = await nostr.getPublicKey();
+        pubkey.value = res;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const disconnect = () => {
+      logout();
+      pubkey.value = null;
+    };
+
+    return { pubkey, onConnect, disconnect };
+  },
+};
+</script>`
+
+export const signEventVueFile = `<template>
+  <div v-if="address" class="w-full">
+    <h2 class="mb-4 text-lg text-center">Sign Event</h2>
+    <label class="label">Event:</label>
+    <textarea class="textarea textarea-bordered w-full h-60 mb-4" placeholder="Signature" :value="JSON.stringify(event, null, 4)" disabled></textarea>
+    <button class="btn btn-primary mb-4 mr-4" @click="onSign">Sign</button>
+    <button class="btn btn-primary btn-outline mb-4" @click="onVerify">Verify</button>
+    <div class="divider"></div>
+  </div>
+</template>
+
+<script lang="ts">
+import { ref, defineComponent } from "vue";
+import { nostr, Event } from "@joyid/nostr";
+import { getBlankEvent, verifySignature } from "nostr-tools";
+
+const blankEvent = getBlankEvent();
+blankEvent.content = Math.random().toString();
+
+export default defineComponent({
+  props: {
+    address: {
+      type: String,
+      default: null,
+    },
+  },
+  setup() {
+    const event = ref<Event>(blankEvent);
+
+    const onSign = async () => {
+      const signedEvent = await nostr.signEvent(blankEvent);
+      event.value = signedEvent;
+    };
+
+    const onVerify = async () => {
+      try {
+        const res = verifySignature(event.value);
+        alert(res);
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    return { event, onSign, onVerify };
+  },
+});
+</script>`
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+    <Sandbox
+      template="react-ts"
+      customSetup={{
+        dependencies: {
+          "@joyid/nostr": "0.1.2",
+          "nostr-tools": "1.17.0",
+        }
+      }}
+      initConfigPackage="@joyid/nostr"
+      files={{
+        'App.tsx': appTsxFile,
+      }}
+    />
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+    <Sandbox
+      template="vue-ts"
+      customSetup={{
+        dependencies: {
+          "@joyid/nostr": "0.1.2",
+          "nostr-tools": "1.17.0",
+        }
+      }}
+      initConfigPackage="@joyid/nostr"
+      files={{
+        'src/App.vue': appVueFile,
+        'src/SignEvent.vue': signEventVueFile,
+      }}
+    />
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
