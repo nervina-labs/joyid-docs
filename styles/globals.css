@@ -9,3 +9,8 @@ html.light nav {
 html.light .bg-base-100 {
   background-color: #fff;
 }
+
+iframe.sandbox {
+  width: 100%;
+  min-height: 500px;
+}
