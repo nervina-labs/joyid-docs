@@ -1,34 +1,13 @@
 # connect
 
-Connect to JoyID wallet and return a address.
+Connect to JoyID wallet and return an ethereum address.
 
 ## Types
 
-```ts
-function connect(config?: EvmConfig): Promise<string>
+- [`EvmConfig`](/apis/evm/init-config#evmconfig)
 
-interface EvmConfig {
-  /**
-   * The name of your app
-   */
-  name?: string
-  /**
-   * The logo of your app
-   */
-  logo?: string
-  /**
-   * The RPC URL of the eth node that your app is using
-   */
-  rpcURL?: string
-  /**
-   * The network that your app is using, defaults to Sepolia testnet
-   */
-  network?: Network
-  /**
-   * The URL of JoyID app url that your app is integrated with, defaults to https://testnet.joyid.dev
-   */
-  joyidAppURL?: string
-}
+```ts
+function connect(config?: EvmConfig): Promise<`0x${string}`>
 ```
 
 ## Example
