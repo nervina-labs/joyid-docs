@@ -1,4 +1,8 @@
-import { Sandpack, SandpackProps, SandpackOptions } from '@codesandbox/sandpack-react'
+import {
+  Sandpack,
+  SandpackProps,
+  SandpackOptions,
+} from '@codesandbox/sandpack-react'
 
 export interface SandboxProps extends SandpackProps {
   documentTitle?: string
@@ -101,7 +105,15 @@ createApp(App).mount('#app')
 }
 
 const SandboxRoot: React.FC<SandboxProps> = (props) => {
-  const { template, documentTitle, initConfigPackage, files: _files, id, options: _options, ...restProps } = props
+  const {
+    template,
+    documentTitle,
+    initConfigPackage,
+    files: _files,
+    id,
+    options: _options,
+    ...restProps
+  } = props
   const htmlFile = buildHtmlFile(template, documentTitle)
   const files: Record<string, string> = {
     '/public/index.html': htmlFile,
@@ -112,7 +124,11 @@ const SandboxRoot: React.FC<SandboxProps> = (props) => {
     // initMode: "user-visible",
     // initModeObserverOptions: { rootMargin: '1400px 0px' },
     editorHeight: 500,
-    externalResources: ["https://cdn.jsdelivr.net/npm/tailwindcss@3.3.5/lib/index.min.js", 'https://cdn.jsdelivr.net/npm/daisyui@3.9.3/dist/full.css', 'https://cdn.jsdelivr.net/npm/tailwindcss@3.3.5/tailwind.min.css'],
+    externalResources: [
+      'https://cdn.jsdelivr.net/npm/tailwindcss@3.3.5/lib/index.min.js',
+      'https://cdn.jsdelivr.net/npm/daisyui@3.9.3/dist/full.css',
+      'https://cdn.jsdelivr.net/npm/tailwindcss@3.3.5/tailwind.min.css',
+    ],
     ..._options,
   }
   if (template === 'react-ts') {
@@ -123,7 +139,9 @@ const SandboxRoot: React.FC<SandboxProps> = (props) => {
     if (!options?.activeFile) {
       options.activeFile = '/App.tsx'
     }
-    options.visibleFiles = ["/App.tsx", "/index.tsx"].concat(options.visibleFiles || [])
+    options.visibleFiles = ['/App.tsx', '/index.tsx'].concat(
+      options.visibleFiles || []
+    )
   } else if (template === 'vue-ts') {
     files['/src/styles.css'] = stylesCssFile
     if (initConfigPackage) {
@@ -132,13 +150,23 @@ const SandboxRoot: React.FC<SandboxProps> = (props) => {
     if (!options.activeFile) {
       options.activeFile = '/src/App.vue'
     }
-    options.visibleFiles = ["/src/App.vue", "/src/main.ts"].concat(options.visibleFiles || [])
+    options.visibleFiles = ['/src/App.vue', '/src/main.ts'].concat(
+      options.visibleFiles || []
+    )
   }
   if (id) {
     options.id = id
   }
 
-  return <Sandpack theme="dark" template={template} files={files} options={options} {...restProps} />
+  return (
+    <Sandpack
+      theme="dark"
+      template={template}
+      files={files}
+      options={options}
+      {...restProps}
+    />
+  )
 }
 
 export default SandboxRoot

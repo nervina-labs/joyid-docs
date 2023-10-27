@@ -5,23 +5,23 @@ const withNextra = nextra({
   themeConfig: './theme.config.tsx',
   latex: true,
   flexsearch: {
-    codeblocks: false
+    codeblocks: false,
   },
-  defaultShowCopyCode: true
+  defaultShowCopyCode: true,
 })
 
 export default withNextra({
   reactStrictMode: true,
   eslint: {
     // ESLint behaves weirdly in this monorepo.
-    ignoreDuringBuilds: true
+    ignoreDuringBuilds: true,
   },
   redirects: () => [
     {
       source: '/',
       destination: '/guide',
-      permanent: true
-    }
+      permanent: true,
+    },
   ],
   images: {
     remotePatterns: [
@@ -34,15 +34,15 @@ export default withNextra({
   webpack(config) {
     const allowedSvgRegex = /components\/icons\/.+\.svg$/
 
-    const fileLoaderRule = config.module.rules.find(rule =>
+    const fileLoaderRule = config.module.rules.find((rule) =>
       rule.test?.test?.('.svg')
     )
     fileLoaderRule.exclude = allowedSvgRegex
 
     config.module.rules.push({
       test: allowedSvgRegex,
-      use: ['@svgr/webpack']
+      use: ['@svgr/webpack'],
     })
     return config
-  }
+  },
 })

@@ -1,11 +1,11 @@
-'use client';
+'use client'
 import { memo, Suspense, useState, useEffect } from 'react'
 import type { SandboxProps } from './sandbox-root'
-import dynamic from "next/dynamic";
+import dynamic from 'next/dynamic'
 
 const SandpackRoot = dynamic(() => import('./sandbox-root'), {
   ssr: true,
-});
+})
 
 const SandpackGlimmer = ({ code }: { code: string }) => (
   <div className="sandpack sandpack--playground my-8">
@@ -43,7 +43,7 @@ const SandpackGlimmer = ({ code }: { code: string }) => (
       </div>
     </div>
   </div>
-);
+)
 
 export const Sandbox = memo(function SandpackWrapper(props: SandboxProps): any {
   // const codeSnippet = createFileMap(Children.toArray(props.children));
@@ -66,8 +66,13 @@ export const Sandbox = memo(function SandpackWrapper(props: SandboxProps): any {
   const activeCode = files[Object.keys(files)[0]]
 
   return (
-    <Suspense fallback={<SandpackGlimmer code={typeof activeCode === 'string' ? activeCode : activeCode?.code} />}>
+    <Suspense
+      fallback={
+        <SandpackGlimmer
+          code={typeof activeCode === 'string' ? activeCode : activeCode?.code}
+        />
+      }>
       <SandpackRoot {...props} />
     </Suspense>
-  );
+  )
 })

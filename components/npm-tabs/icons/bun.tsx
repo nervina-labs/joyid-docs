@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps } from 'react'
 
 export function Bun(props: ComponentProps<'svg'>) {
   return (
@@ -97,5 +97,5 @@ export function Bun(props: ComponentProps<'svg'>) {
         />
       </g>
     </svg>
-  );
+  )
 }

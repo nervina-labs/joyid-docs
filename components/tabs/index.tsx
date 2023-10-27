@@ -20,7 +20,7 @@ function _Tabs({
   defaultIndex = '0',
   onChange,
   children,
-  storageKey
+  storageKey,
 }: {
   items: (TabItem | TabObjectItem)[]
   selectedIndex?: string
@@ -78,10 +78,9 @@ function _Tabs({
     <HeadlessTab.Root
       // selectedIndex={selectedIndex}
       // defaultIndex={defaultIndex}
-      defaultValue='0'
+      defaultValue="0"
       value={selectedIndex}
-      onValueChange={handleChange}
-    >
+      onValueChange={handleChange}>
       <div className="nextra-scrollbar nx-overflow-x-auto nx-overflow-y-hidden nx-overscroll-x-contain">
         <HeadlessTab.List className="nx-mt-4 nx-flex nx-w-max nx-min-w-full nx-border-b nx-border-gray-200 nx-pb-px dark:nx-border-neutral-800">
           {items.map((item, index) => {
@@ -99,9 +98,8 @@ function _Tabs({
                     ? 'nx-border-primary-500 nx-text-primary-600'
                     : 'nx-border-transparent nx-text-gray-600 hover:nx-border-gray-200 hover:nx-text-black dark:nx-text-gray-200 dark:hover:nx-border-neutral-800 dark:hover:nx-text-white',
                   disabled &&
-                  'nx-pointer-events-none nx-text-gray-400 dark:nx-text-neutral-600'
-                )}
-              >
+                    'nx-pointer-events-none nx-text-gray-400 dark:nx-text-neutral-600'
+                )}>
                 {isTabObjectItem(item) ? item.label : item}
               </HeadlessTab.Trigger>
             )
