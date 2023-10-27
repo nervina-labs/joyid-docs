@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import Image from 'next/image'
 
 /* eslint-disable @next/next/no-img-element */
 export interface CardProps {
@@ -11,7 +12,7 @@ export interface CardProps {
 
 export const Card: React.FC<CardProps> = ({ preview, github, previewImage, title, desc }) => {
   return <div className={clsx('card card-compact bg-base-100 lg:w-80 xl:w-96 shadow-xl sm:w-80')}>
-    {previewImage ? <figure><img src={previewImage} alt={title} /></figure> : null}
+    {previewImage ? <figure><Image src={previewImage} alt={title} width="400" height="200" /></figure> : null}
     <div className="card-body">
       <h2 className="card-title">{title}</h2>
       <p>{desc}</p>

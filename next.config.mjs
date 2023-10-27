@@ -23,6 +23,14 @@ export default withNextra({
       permanent: true
     }
   ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+  },
   webpack(config) {
     const allowedSvgRegex = /components\/icons\/.+\.svg$/
 
