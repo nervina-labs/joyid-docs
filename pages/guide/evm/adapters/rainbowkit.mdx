@@ -14,6 +14,14 @@ import { PackageManagerTabs } from '@/components/npm-tabs'
 
 Use JoyID with RainbowKit is easy than you think, just need to import `JoyIdWallet` from `@joyid/rainbowkit` and pass it to `wallets` in `connectorsForWallets` function.
 
+import { Callout } from 'nextra/components'
+
+<Callout type="info">
+The `joyidAppURL` parameter is the JoyID App URL that your app will connect to.
+  - Testnet: https://testnet.joyid.dev
+  - Mainnet: https://app.joy.id
+</Callout>
+
 ```tsx filename="provider.tsx" /JoyIdWallet/
 import { WagmiConfig, createConfig, configureChains } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';

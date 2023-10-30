@@ -18,6 +18,14 @@ import { PackageManagerTabs } from '@/components/npm-tabs'
 
 Use JoyID with Wagmi is easy than you think, just need to create a new instance of `JoyIdConnector` and pass it to `WagmiConfig` component.
 
+import { Callout } from 'nextra/components'
+
+<Callout type="info">
+The `joyidAppURL` parameter is the JoyID App URL that your app will connect to.
+  - Testnet: https://testnet.joyid.dev
+  - Mainnet: https://app.joy.id
+</Callout>
+
 ```tsx filename="provider.tsx" /JoyIdConnector/
 import * as React from "react";
 import { WagmiConfig, createConfig, configureChains } from "wagmi";
