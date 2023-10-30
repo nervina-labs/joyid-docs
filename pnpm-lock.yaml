@@ -8,6 +8,9 @@ dependencies:
   '@codesandbox/sandpack-react':
     specifier: ^2.9.0
     version: 2.9.0(@lezer/common@1.1.0)(react-dom@18.2.0)(react@18.2.0)
+  '@codesandbox/sandpack-themes':
+    specifier: ^2.0.21
+    version: 2.0.21
   '@radix-ui/react-tabs':
     specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.0.0)(@types/react@18.0.0)(react-dom@18.2.0)(react@18.2.0)
@@ -1487,6 +1490,10 @@ packages:
       react-is: 17.0.2
     transitivePeerDependencies:
       - '@lezer/common'
+    dev: false
+
+  /@codesandbox/sandpack-themes@2.0.21:
+    resolution: {integrity: sha512-CMH/MO/dh6foPYb/3eSn2Cu/J3+1+/81Fsaj7VggICkCrmRk0qG5dmgjGAearPTnRkOGORIPHuRqwNXgw0E6YQ==}
     dev: false
 
   /@eslint/eslintrc@1.4.1:

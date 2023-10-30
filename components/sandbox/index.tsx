@@ -4,7 +4,7 @@ import type { SandboxProps } from './sandbox-root'
 import dynamic from 'next/dynamic'
 
 const SandpackRoot = dynamic(() => import('./sandbox-root'), {
-  ssr: true,
+  ssr: false,
 })
 
 const SandpackGlimmer = ({ code }: { code: string }) => (
@@ -46,25 +46,8 @@ const SandpackGlimmer = ({ code }: { code: string }) => (
 )
 
 export const Sandbox = memo(function SandpackWrapper(props: SandboxProps): any {
-  // const codeSnippet = createFileMap(Children.toArray(props.children));
-
-  // To set the active file in the fallback we have to find the active file first.
-  // If there are no active files we fallback to App.js as default.
-  // let activeCodeSnippet = Object.keys(codeSnippet).filter(
-  //   (fileName) =>
-  //     codeSnippet[fileName]?.active === true &&
-  //     codeSnippet[fileName]?.hidden === false
-  // );
-  // let activeCode;
-  // if (!activeCodeSnippet.length) {
-  //   activeCode = codeSnippet['/App.js'].code;
-  // } else {
-  //   activeCode = codeSnippet[activeCodeSnippet[0]].code;
-  // }
-
   const { files = {} } = props
   const activeCode = files[Object.keys(files)[0]]
-
   return (
     <Suspense
       fallback={
