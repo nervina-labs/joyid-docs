@@ -41,8 +41,11 @@ export const { chains, publicClient } = configureChains(
 export const joyidConnector = new JoyIdConnector({
   chains,
   options: {
+    // name of your app
     name: "JoyID demo",
+    // logo of your app
     logo: "https://fav.farm/🆔",
+    // JoyID app url that your app is integrated with
     joyidAppURL: "https://testnet.joyid.dev",
   },
 });

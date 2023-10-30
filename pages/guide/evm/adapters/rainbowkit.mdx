@@ -46,9 +46,12 @@ const connectors = connectorsForWallets([
             JoyIdWallet({
                 chains,
                 options: {
-                    name: 'JoyID RainbowKit demo',
-                    logo: 'https://fav.farm/🆔',
-                    joyidAppURL: 'https://testnet.joyid.dev',
+                  // name of your app
+                  name: "JoyID demo",
+                  // logo of your app
+                  logo: "https://fav.farm/🆔",
+                  // JoyID app url that your app is integrated with
+                  joyidAppURL: "https://testnet.joyid.dev",
                 },
             }),
             injectedWallet({ chains, shimDisconnect: true }),

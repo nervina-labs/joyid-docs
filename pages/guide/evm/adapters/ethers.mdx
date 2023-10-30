@@ -50,8 +50,11 @@ export function createProvider() {
   const joyidConfig = {
     rpcURL,
     network,
+    // name of your app
     name: "JoyID demo",
+    // logo of your app
     logo: "https://fav.farm/🆔",
+    // JoyID app url that your app is integrated with
     joyidAppURL: "https://testnet.joyid.dev",
   }
   return new JoyIDProvider(
