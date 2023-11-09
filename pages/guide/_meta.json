@@ -1,5 +1,6 @@
 {
   "index": "Introduction",
+  "security-model": "Security Model",
   "evm": "EVM",
   "ckb": "CKB",
   "nostr": "Nostr"
