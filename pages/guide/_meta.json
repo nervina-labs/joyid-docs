@@ -2,6 +2,8 @@
   "index": "Introduction",
   "public-good": "Public Good",
   "security-model": "Security Model",
+  "applications": "Applications", 
+  "sdk":"Interact with JoyID",
   "evm": "EVM",
   "ckb": "CKB",
   "nostr": "Nostr"
