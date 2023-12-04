@@ -1,4 +1,4 @@
-# Telegran Apps Integration
+# Telegram Apps Integration
 
 ## Introduction
 
