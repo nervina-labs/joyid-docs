@@ -1,14 +1,16 @@
+import { FrameworkTabs } from '@/components/framework-tabs'
+
 # Connect
 
-Connect your dapp with the JoyID which enables your dapp to interact with its users' Nervos CKB accounts. Nervos CKB is a public permissionless blockchain and the layer 1 of Nervos. See [Nervos Docs ↗](https://docs.nervos.org/) for more details.
+In this guide, we will use the `@joyid/ckb` SDK `connect()` function to connect a dapp to the JoyID wallet and Nervos CKB network.
 
-In this integration guide, we will use `@joyid/ckb` SDK to connect to JoyID wallet with Nervos CKB network.
+Connecting your dapp to JoyID is always the first step before you can interact with a user's Nervos CKB address. This must be done before any other actions can be performed.
+
+Nervos CKB is a layer 1 public blockchain and the foundation of the Nervos Network ecosystem. For more information about Nervos Network, please visit the [Nervos Docs](https://docs.nervos.org/) website.
 
 ## Initialization
 
-Before writing business code, you can call the initialization function `initConfig` on the project entry:
-
-import { FrameworkTabs } from '@/components/framework-tabs'
+You must always initialize the configuration as the first step. This is done using the `initConfig()` function and is normally done immediately after program entry.
 
 <FrameworkTabs>
   <FrameworkTabs.React>
@@ -30,7 +32,6 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <App />
   </React.StrictMode>,
 );
-
 ```
   </FrameworkTabs.React>
   <FrameworkTabs.Vue>
@@ -48,15 +49,13 @@ initConfig({
 
 createApp(App).mount("#app");
 ```
-
   </FrameworkTabs.Vue>
 </FrameworkTabs>
 
 
 ### Get Started
 
-Let's start the journey of business code programming. Suppose you have the following code:
-
+With the configuration initialized, we're ready to begin adding code to interact with JoyID. Next we add some basic interface code.
 
 <FrameworkTabs>
   <FrameworkTabs.React>
@@ -92,8 +91,7 @@ export default {
   </FrameworkTabs.Vue>
 </FrameworkTabs>
 
-
-To connect with JoyID, we just need to add a `button` element and listen to the `onClick` event:
+To connect with JoyID, we will add to our interface a `button` element and bind the `onClick` event to call the `connect()` function.
 
 <FrameworkTabs>
   <FrameworkTabs.React>
@@ -147,11 +145,23 @@ export default {
   },
 }
 ```
-
   </FrameworkTabs.Vue>
 </FrameworkTabs>
 
-## Try it out
+After establishing a connection, the `connect()` function will return the user's JoyID information.
+
+```json
+{
+    "address": "ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqx0r8ye9e2hqd7sc9wpxxvlul6ynzltyvqftele3",
+    "ethAddress": "0x2b0586bf591CA8e96132646BD17bc86DaDc6D015",
+    "keyType": "main_key",
+    "alg": -7,
+    "nostrPubkey": "399669b4c1802f42e4515104c7b7bcb7d1385ccc0547906cb6d5a8d0cb8d5575",
+    "pubkey": "755a1bfa644d55a5914d185ea27c1f67565ccef677fbbb4750551d33f3789e89898a455599164ca2293bef50d2f5424bf97209e661a1e2f636d8e782340ccf15"
+}
+```
+
+## Try it Out
 
 <FrameworkTabs>
   <FrameworkTabs.React>
