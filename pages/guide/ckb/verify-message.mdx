@@ -1,3 +1,5 @@
+import { ClickToActivate } from '@/components/click-to-activate';
+
 # Verify Signature
 
 In this guide we will verify a signature using the `@joyid/ckb` SDK `verifySignature()` function.
@@ -33,11 +35,13 @@ alert(result) // true or false
 
 import { FrameworkTabs } from '@/components/framework-tabs'
 
-<FrameworkTabs>
-  <FrameworkTabs.React>
-    <iframe  className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-msg-my8aiy?embed=1&file=src%2FApp.tsx&view=preview" ></iframe>
-  </FrameworkTabs.React>
-  <FrameworkTabs.Vue>
-    <iframe  className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-msg-uhg69m?embed=1&file=src%2FApp.vue&view=preview" ></iframe>
-  </FrameworkTabs.Vue>
-</FrameworkTabs>
+<ClickToActivate>
+  <FrameworkTabs>
+    <FrameworkTabs.React>
+      <iframe  className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-msg-my8aiy?embed=1&file=src%2FApp.tsx&view=preview" ></iframe>
+    </FrameworkTabs.React>
+    <FrameworkTabs.Vue>
+      <iframe  className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-msg-uhg69m?embed=1&file=src%2FApp.vue&view=preview" ></iframe>
+    </FrameworkTabs.Vue>
+  </FrameworkTabs>
+</ClickToActivate>

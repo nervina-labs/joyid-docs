@@ -1,3 +1,6 @@
+import { ClickToActivate } from '@/components/click-to-activate';
+import { FrameworkTabs } from '@/components/framework-tabs';
+
 # Sign Message
 
 In this guide we will use a JoyID connection to sign a message/challenge using the `@joyid/ckb` SDK `signChallenge()` function.
@@ -16,8 +19,6 @@ To sign a challenge with the user's JoyID session, complete the following steps.
 ## Step 1: Save the User's JoyID Information
 
 In the [connect guide](/guide/ckb/connect), we created a connection with JoyID and received the user's JoyID information. Now we need to retain this information so it can be used for signing. There are many ways this can be done, but we will demonstrate this below using a state variable of the React component and the Vuex store of the Vue app.
-
-import { FrameworkTabs } from '@/components/framework-tabs'
 
 <FrameworkTabs>
   <FrameworkTabs.React>
@@ -190,11 +191,13 @@ To learn more about the `signChallenge()` function, please check the [API Refere
 
 ## Try it Out
 
-<FrameworkTabs>
-  <FrameworkTabs.React>
-    <iframe  className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-msg?embed=1&file=App.tsx&view=preview" ></iframe>
-  </FrameworkTabs.React>
-  <FrameworkTabs.Vue>
-    <iframe  className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-msg?embed=1&file=App.vue&view=preview" ></iframe>
-  </FrameworkTabs.Vue>
-</FrameworkTabs>
+<ClickToActivate>
+  <FrameworkTabs>
+    <FrameworkTabs.React>
+      <iframe  className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-msg?embed=1&file=App.tsx&view=preview" ></iframe>
+    </FrameworkTabs.React>
+    <FrameworkTabs.Vue>
+      <iframe  className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-msg?embed=1&file=App.vue&view=preview" ></iframe>
+    </FrameworkTabs.Vue>
+  </FrameworkTabs>
+</ClickToActivate>
