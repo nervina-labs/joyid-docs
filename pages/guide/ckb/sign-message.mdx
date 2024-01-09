@@ -1,90 +1,18 @@
+import { Callout } from 'nextra/components';
 import { ClickToActivate } from '@/components/click-to-activate';
 import { FrameworkTabs } from '@/components/framework-tabs';
+import CalloutChallengeVsMessage from './_shared/callout-challenge-vs-message.mdx';
+import Step1SaveUsersJoyidInfo from './_shared/step-1-save-users-joyid-info.mdx';
 
 # Sign Message
 
 In this guide we will use a JoyID connection to sign a message/challenge using the `@joyid/ckb` SDK `signChallenge()` function.
 
-<Callout emoji="ℹ️" type="info">
-Understanding the difference between a `challenge` and a `message`.
-
-A `challenge` is what you as a developer need JoyID to sign.
-A `message` is the piece of data that JoyID actually signs. A `message` is a combination of a `challenge` and some other data needed to complete the process, such as authenticator data, etc. The `challenge` is always included within the `message`.
-
-For more information, you can check out the [WebAuthn Spec](https://www.w3.org/TR/webauthn-2/#sctn-op-get-assertion).
-</Callout>
+<CalloutChallengeVsMessage />
 
 To sign a challenge with the user's JoyID session, complete the following steps.
 
-## Step 1: Save the User's JoyID Information
-
-In the [connect guide](/guide/ckb/connect), we created a connection with JoyID and received the user's JoyID information. Now we need to retain this information so it can be used for signing. There are many ways this can be done, but we will demonstrate this below using a state variable of the React component and the Vuex store of the Vue app.
-
-<FrameworkTabs>
-  <FrameworkTabs.React>
-```ts filename="App.tsx" /connect/
-import * as React from 'react'
-import { connect } from '@joyid/ckb'
-import './style.css'
-
-export default function App() {
-  const [joyidInfo, setJoyidInfo] = React.useState(null)
-
-  const onConnect = async () => {
-    try {
-      const authData = await connect()
-      setJoyidInfo(setJoyidInfo)
-      console.log(`JoyID user info:`, authData)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  return (
-    <div>
-      <h1>Hello JoyID!</h1>
-      <button onClick={onConnect}>Connect JoyID</button>
-    </div>
-  )
-}
-```
-  </FrameworkTabs.React>
-  <FrameworkTabs.Vue>
-```vue filename="App.vue" /connect/
-<template>
-  <div id="app">
-    <h1>Hello JoyID!</h1>
-    <button @click="connect">Connect JoyID</button>
-  </div>
-</template>
-
-<script>
-import { connect } from '@joyid/ckb'
-
-export default {
-  name: 'App',
-  data() {
-    return {
-      joyidInfo: null,
-    }
-  },
-  methods: {
-    async connect() {
-      try {
-        const authData = await connect()
-        this.joyidInfo = authData
-        console.log(`JoyID user info:`, authData)
-      } catch (error) {
-        console.log(error)
-      }
-    },
-  },
-}
-```
-
-  </FrameworkTabs.Vue>
-</FrameworkTabs>
-
+<Step1SaveUsersJoyidInfo />
 
 ## Step 2: Sign a Challenge
 
@@ -93,30 +21,30 @@ The next step after establishing a connection is to call the `signChallenge()` f
 Note: In order to use the `signChallenge()` function, we must provide the address to sign with. This is why we specifically retained the user's JoyID information after establishing a connection, beucase it contains user's address.
 
 <FrameworkTabs>
-  <FrameworkTabs.React>
+<FrameworkTabs.React>
 ```js filename="App.tsx" /signChallenge/
-import * as React from 'react'
-import { connect, signChallenge } from '@joyid/ckb'
-import './style.css'
+import * as React from 'react';
+import { connect, signChallenge } from '@joyid/ckb';
+import './style.css';
 
 export default function App() {
-  const [joyidInfo, setJoyidInfo] = React.useState(null)
-  const [challenge, setChallenge] = React.useState('Sign this for me')
+  const [joyidInfo, setJoyidInfo] = React.useState(null);
+  const [challenge, setChallenge] = React.useState('Sign this for me');
 
   const onConnect = async () => {
     try {
-      const authData = await connect()
-      setJoyidInfo(authData)
-      console.log(`JoyID user info:`, authData)
+      const authData = await connect();
+      setJoyidInfo(authData);
+      console.log(`JoyID user info:`, authData);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
   const onSign = async () => {
-    const res = await signChallenge(challenge, joyidInfo.address)
+    const res = await signChallenge(challenge, joyidInfo.address);
     if (res) {
-      alert('Sign message successful')
-      console.log(`Sign message result: ${res}`)
+      alert('Sign message successful');
+      console.log(`Sign message result: ${res}`);
     }
   }
   return (
@@ -130,11 +58,11 @@ export default function App() {
         </div>
       ) : null}
     </div>
-  )
+  );
 }
 ```
-  </FrameworkTabs.React>
-  <FrameworkTabs.Vue>
+</FrameworkTabs.React>
+<FrameworkTabs.Vue>
 ```vue filename="App.vue" /signChallenge/
 <template>
   <div id="app">
@@ -148,7 +76,7 @@ export default function App() {
 </template>
 
 <script>
-import { connect, signChallenge } from '@joyid/ckb'
+import { connect, signChallenge } from '@joyid/ckb';
 
 export default {
   name: 'App',
@@ -161,29 +89,26 @@ export default {
   methods: {
     async connect() {
       try {
-        const authData = await connect()
-        this.joyidInfo = authData
-        console.log(`JoyID user info:`, authData)
+        const authData = await connect();
+        this.joyidInfo = authData;
+        console.log(`JoyID user info:`, authData);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
     async sign() {
       const res = await signChallenge(this.challenge, this.joyidInfo.address)
       if (res) {
-        alert('Sign message successful')
-        console.log(`Sign message result: ${res}`)
+        alert('Sign message successful');
+        console.log(`Sign message result: ${res}`);
       }
     },
   },
 }
 </script>
 ```
-  </FrameworkTabs.Vue>
+</FrameworkTabs.Vue>
 </FrameworkTabs>
-
-
-import { Callout } from 'nextra/components'
 
 <Callout emoji="💡">
 To learn more about the `signChallenge()` function, please check the [API Reference](/apis/ckb/sign).
@@ -194,10 +119,10 @@ To learn more about the `signChallenge()` function, please check the [API Refere
 <ClickToActivate>
   <FrameworkTabs>
     <FrameworkTabs.React>
-      <iframe  className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-msg?embed=1&file=App.tsx&view=preview" ></iframe>
+      <iframe className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-msg?embed=1&file=App.tsx&view=preview" />
     </FrameworkTabs.React>
     <FrameworkTabs.Vue>
-      <iframe  className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-msg?embed=1&file=App.vue&view=preview" ></iframe>
+      <iframe className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-msg?embed=1&file=App.vue&view=preview" />
     </FrameworkTabs.Vue>
   </FrameworkTabs>
 </ClickToActivate>

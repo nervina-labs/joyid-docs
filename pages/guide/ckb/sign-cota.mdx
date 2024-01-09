@@ -1,4 +1,8 @@
+import { Callout } from 'nextra/components';
 import { ClickToActivate } from '@/components/click-to-activate';
+import { FrameworkTabs } from '@/components/framework-tabs';
+import Step1SaveUsersJoyidInfo from './_shared/step-1-save-users-joyid-info.mdx';
+import NodeCodeDoesNotBroadcast from './_shared/note-code-does-not-broadcast.mdx';
 
 # Sign CoTA NFT Transaction
 
@@ -8,75 +12,7 @@ The CoTA (Compact Token Aggregator) protocol is a layer-1.5 account-based non-fu
 
 To sign a transaction and send a CoTA NFT with the user's JoyID session, complete the following steps.
 
-## Step 1: Save the User's JoyID Information
-
-In the [connect guide](/guide/ckb/connect), we created a connection with JoyID and received the user's JoyID information. Now we need to retain this information so it can be used for signing. There are many ways this can be done, but we will demonstrate this below using a state variable of the React component and the Vuex store of the Vue app.
-
-import { FrameworkTabs } from '@/components/framework-tabs'
-
-<FrameworkTabs>
-  <FrameworkTabs.React>
-```ts filename="App.tsx" /connect/
-import * as React from 'react'
-import { connect } from '@joyid/ckb'
-import './style.css'
-
-export default function App() {
-  const [joyidInfo, setJoyidInfo] = React.useState(null)
-
-  const onConnect = async () => {
-    try {
-      const authData = await connect()
-      setJoyidInfo(setJoyidInfo)
-      console.log(`JoyID user info:`, authData)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  return (
-    <div>
-      <h1>Hello JoyID!</h1>
-      <button onClick={onConnect}>Connect JoyID</button>
-    </div>
-  )
-}
-```
-  </FrameworkTabs.React>
-  <FrameworkTabs.Vue>
-```vue filename="App.vue" /connect/
-<template>
-  <div id="app">
-    <h1>Hello JoyID!</h1>
-    <button @click="connect">Connect JoyID</button>
-  </div>
-</template>
-
-<script>
-import { connect } from '@joyid/ckb'
-
-export default {
-  name: 'App',
-  data() {
-    return {
-      joyidInfo: null,
-    }
-  },
-  methods: {
-    async connect() {
-      try {
-        const authData = await connect()
-        this.joyidInfo = authData
-        console.log(`JoyID user info:`, authData)
-      } catch (error) {
-        console.log(error)
-      }
-    },
-  },
-}
-```
-  </FrameworkTabs.Vue>
-</FrameworkTabs>
+<Step1SaveUsersJoyidInfo />
 
 ## Step 2: Claim CoTA NFTs
 
@@ -94,34 +30,31 @@ Looking at the last path parameter `ffffffff003688bb1cba009d89dd3f1c8a6027a0c585
 
 Now that we have created a connection, claimed an NFT, and have the TokenKey for that NFT, we are ready to create and sign a transaction to send it to another address using the `signCotaNFTTx()` function. We add a couple fields for the required fields, and the sending address is taken from the JoyID information that was returned from `connect()`.
 
-import { Callout } from 'nextra/components'
-
 <Callout emoji="ℹ️" type="info">
 In order to send an NFT you must have a CoTA cell to manage your NFT assets. This allows CoTA to manage the user's SMT data on-chain. The most simple way to do this is to upgrade your JoyID account. You will be prompted to do so on the first time you try to send. This only needs to be done once.
 </Callout>
 
-The code below will create a signed transaction, but it does not broadcast it to the network. To do so you must use an RPC call to a CKB node. For more information on setting up a local node or using a public community node, please visit the [Nervos Docs Site](https://docs.nervos.org/).
+<NodeCodeDoesNotBroadcast />
 
 <FrameworkTabs>
   <FrameworkTabs.React>
 ```js filename="App.tsx" /signCotaNFTTx/
-import * as React from 'react'
-import { connect, signCotaNFTTx } from '@joyid/ckb'
-import './style.css'
+import * as React from 'react';
+import { connect, signCotaNFTTx } from '@joyid/ckb';
+import './style.css';
 
 export default function App() {
-  const [joyidInfo, setJoyidInfo] = React.useState(null)
-  const [toAddress, setToAddress] = React.useState(
-    'ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqxv6drphrp47xalweq9pvr6ll3mvkj225quegpcw',
-  )
+  const [joyidInfo, setJoyidInfo] = React.useState(null);
+  const [toAddress, setToAddress] = React.useState('ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqxv6drphrp47xalweq9pvr6ll3mvkj225quegpcw');
   // The TokenKey prefix `ffffffff` is optional and it is just an example, you should replace real value with your own TokenKey
-  const [tokenKey, setTokenKey] = React.useState('0x003688bb1cba009d89dd3f1c8a6027a0c5851e8600000006')
+  const [tokenKey, setTokenKey] = React.useState('0x003688bb1cba009d89dd3f1c8a6027a0c5851e8600000006');
+
   const onConnect = async () => {
     try {
-      const authData = await connect()
-      setJoyidInfo(authData)
+      const authData = await connect();
+      setJoyidInfo(authData);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
@@ -130,8 +63,8 @@ export default function App() {
       to: toAddress,
       from: joyidInfo.address,
       tokenKey,
-    })
-    console.log('signedTx', signedTx)
+    });
+    console.log('signedTx', signedTx);
     // You can use CKB RPC `sendTransaction` to send the `signedTx` to the blockchain.
   }
   return (
@@ -146,7 +79,7 @@ export default function App() {
         </div>
       ) : null}
     </div>
-  )
+  );
 }
 ```
   </FrameworkTabs.React>
@@ -165,7 +98,7 @@ export default function App() {
 </template>
 
 <script>
-import { connect, signCotaNFTTx } from '@joyid/ckb'
+import { connect, signCotaNFTTx } from '@joyid/ckb';
 
 export default {
   name: 'App',
@@ -175,15 +108,15 @@ export default {
       toAddress: 'ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqxv6drphrp47xalweq9pvr6ll3mvkj225quegpcw',
       // The TokenKey prefix `ffffffff` is optional and it is just an example, you should replace real value with your own TokenKey
       tokenKey: '0x003688bb1cba009d89dd3f1c8a6027a0c5851e8600000006',
-    }
+    };
   },
   methods: {
     async connect() {
       try {
-        const authData = await connect()
-        this.joyidInfo = authData
+        const authData = await connect();
+        this.joyidInfo = authData;
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
     async sign() {
@@ -191,8 +124,8 @@ export default {
         to: this.toAddress,
         from: this.joyidInfo.address,
         tokenKey: this.tokenKey,
-      })
-      console.log('signedTx', signedTx)
+      });
+      console.log('signedTx', signedTx);
       // You can use CKB RPC `sendTransaction` to send the `signedTx` to the blockchain.
     },
   },
@@ -206,16 +139,15 @@ export default {
 To learn more about the `signCotaNFTTx()` function, please check the [API Reference](/apis/ckb/sign-cota-nft).
 </Callout>
 
-
 ## Try it Out
 
 <ClickToActivate>
   <FrameworkTabs>
     <FrameworkTabs.React>
-      <iframe  className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-nft-tx?embed=1&file=App.tsx&view=preview" ></iframe>
+      <iframe className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-nft-tx?embed=1&file=App.tsx&view=preview" />
     </FrameworkTabs.React>
     <FrameworkTabs.Vue>
-      <iframe  className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-nft-tx?embed=1&file=App.vue&view=preview" ></iframe>
+      <iframe className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-nft-tx?embed=1&file=App.vue&view=preview" />
     </FrameworkTabs.Vue>
   </FrameworkTabs>
 </ClickToActivate>

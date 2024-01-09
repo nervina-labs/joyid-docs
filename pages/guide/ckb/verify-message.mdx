@@ -1,4 +1,7 @@
+import { Callout } from 'nextra/components'
 import { ClickToActivate } from '@/components/click-to-activate';
+import { FrameworkTabs } from '@/components/framework-tabs'
+import CalloutChallengeVsMessage from './_shared/callout-challenge-vs-message.mdx';
 
 # Verify Signature
 
@@ -6,16 +9,7 @@ In this guide we will verify a signature using the `@joyid/ckb` SDK `verifySigna
 
 After signing a challenge with `signChallenge()`, a JSON object is returned which includes the properties `challenge`, `message` and `signature`. This JSON object can be used to verify the signature using `verifySignature()`.
 
-import { Callout } from 'nextra/components'
-
-<Callout emoji="ℹ️" type="info">
-Understanding the difference between a `challenge` and a `message`.
-
-A `challenge` is what you as a developer need JoyID to sign.
-A `message` is the piece of data that JoyID actually signs. A `message` is a combination of a `challenge` and some other data needed to complete the process, such as authenticator data, etc. The `challenge` is always included within the `message`.
-
-For more information, you can check out the [WebAuthn Spec](https://www.w3.org/TR/webauthn-2/#sctn-op-get-assertion).
-</Callout>
+<CalloutChallengeVsMessage />
 
 There are two steps to verify a signature:
 
@@ -23,25 +17,23 @@ There are two steps to verify a signature:
 2. Verify the signature that is signed by the credential.
 
 ```js
-import { signChallenge } from '@joyid/ckb'
-import { verifySignature } from '@joyid/core'
+import { signChallenge } from '@joyid/ckb';
+import { verifySignature } from '@joyid/core';
 
-const data = await signChallenge(quest)
-const result = await verifySignature(data)
-alert(result) // true or false
+const data = await signChallenge(quest);
+const result = await verifySignature(data);
+alert(result); // true or false
 ```
 
 ## Try it Out
 
-import { FrameworkTabs } from '@/components/framework-tabs'
-
 <ClickToActivate>
   <FrameworkTabs>
     <FrameworkTabs.React>
-      <iframe  className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-msg-my8aiy?embed=1&file=src%2FApp.tsx&view=preview" ></iframe>
+      <iframe className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-msg-my8aiy?embed=1&file=src%2FApp.tsx&view=preview" />
     </FrameworkTabs.React>
     <FrameworkTabs.Vue>
-      <iframe  className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-msg-uhg69m?embed=1&file=src%2FApp.vue&view=preview" ></iframe>
+      <iframe className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-msg-uhg69m?embed=1&file=src%2FApp.vue&view=preview" />
     </FrameworkTabs.Vue>
   </FrameworkTabs>
 </ClickToActivate>

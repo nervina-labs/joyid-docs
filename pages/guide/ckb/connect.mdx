@@ -1,5 +1,6 @@
-import { FrameworkTabs } from '@/components/framework-tabs'
+import { Callout } from 'nextra/components';
 import { ClickToActivate } from '@/components/click-to-activate';
+import { FrameworkTabs } from '@/components/framework-tabs';
 
 # Connect
 
@@ -14,7 +15,7 @@ Nervos CKB is a layer 1 public blockchain and the foundation of the Nervos Netwo
 You must always initialize the configuration as the first step. This is done using the `initConfig()` function and is normally done immediately after program entry.
 
 <FrameworkTabs>
-  <FrameworkTabs.React>
+<FrameworkTabs.React>
 ```ts filename="main.tsx" /initConfig/
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -34,13 +35,13 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   </React.StrictMode>,
 );
 ```
-  </FrameworkTabs.React>
-  <FrameworkTabs.Vue>
+</FrameworkTabs.React>
+<FrameworkTabs.Vue>
 ```ts filename="main.ts" /initConfig/
 import { createApp } from "vue";
-import "./style.css";
-import App from "./App.vue";
 import { initConfig } from "@joyid/ckb";
+import App from "./App.vue";
+import "./style.css";
 
 initConfig({
   name: "JoyID demo",
@@ -50,31 +51,30 @@ initConfig({
 
 createApp(App).mount("#app");
 ```
-  </FrameworkTabs.Vue>
+</FrameworkTabs.Vue>
 </FrameworkTabs>
-
 
 ### Get Started
 
 With the configuration initialized, we're ready to begin adding code to interact with JoyID. Next we add some basic interface code.
 
 <FrameworkTabs>
-  <FrameworkTabs.React>
+<FrameworkTabs.React>
 ```ts filename="App.tsx"
-import * as React from 'react'
-import './style.css'
+import * as React from 'react';
+import './style.css';
 
 export default function App() {
   return (
     <div>
       <h1>Hello JoyID!</h1>
     </div>
-  )
+  );
 }
 
 ```
-  </FrameworkTabs.React>
-  <FrameworkTabs.Vue>
+</FrameworkTabs.React>
+<FrameworkTabs.Vue>
 ```vue filename="App.vue"
 <template>
   <div id="app">
@@ -88,26 +88,25 @@ export default {
 }
 </script>
 ```
-
-  </FrameworkTabs.Vue>
+</FrameworkTabs.Vue>
 </FrameworkTabs>
 
 To connect with JoyID, we will add to our interface a `button` element and bind the `onClick` event to call the `connect()` function.
 
 <FrameworkTabs>
-  <FrameworkTabs.React>
+<FrameworkTabs.React>
 ```ts filename="App.tsx" /connect/
-import * as React from 'react'
-import { connect } from '@joyid/ckb'
-import './style.css'
+import * as React from 'react';
+import { connect } from '@joyid/ckb';
+import './style.css';
 
 export default function App() {
   const onConnect = async () => {
     try {
-      const authData = await connect()
-      console.log(`JoyID user info:`, authData)
+      const authData = await connect();
+      console.log(`JoyID user info:`, authData);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
@@ -116,11 +115,11 @@ export default function App() {
       <h1>Hello JoyID!</h1>
       <button onClick={onConnect}>Connect JoyID</button>
     </div>
-  )
+  );
 }
 ```
-  </FrameworkTabs.React>
-  <FrameworkTabs.Vue>
+</FrameworkTabs.React>
+<FrameworkTabs.Vue>
 ```vue filename="App.vue" /connect/
 <template>
   <div id="app">
@@ -130,23 +129,24 @@ export default function App() {
 </template>
 
 <script>
-import { connect } from '@joyid/ckb'
+import { connect } from '@joyid/ckb';
 
 export default {
   name: 'App',
   methods: {
     async connect() {
       try {
-        const authData = await connect()
-        console.log(`JoyID user info:`, authData)
+        const authData = await connect();
+        console.log(`JoyID user info:`, authData);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
   },
 }
+</script>
 ```
-  </FrameworkTabs.Vue>
+</FrameworkTabs.Vue>
 </FrameworkTabs>
 
 After establishing a connection, the `connect()` function will return the user's JoyID information.
