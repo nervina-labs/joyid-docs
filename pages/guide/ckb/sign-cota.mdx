@@ -1,23 +1,14 @@
 # Sign CoTA NFT Transaction
 
-Once the connection is complete, we will get the user's JoyID information, such as address, public key, credential, etc. In this guide, we will continue our previous journey in [Connect](/guide/ckb/connect) by signing transactions to send CKB CoTA NFT after the connection is complete.
+In this guide we will create and sign a transaction to send a CoTA NFT using the `@joyid/ckb` SDK `signCotaNFTTx()` function.
 
-The CoTA (aka. Compact Token Aggregator) protocol is a layer-1.5 account based non-fungible token and k-v data management solution on Nervos CKB. The basic idea of CoTA is to manage and verify enormous number of data by a Sparse Merkle Tree (SMT) with a constant size(like 32 bytes) of on-chain storage space.
+The CoTA (Compact Token Aggregator) protocol is a layer-1.5 account-based non-fungible token and data management solution on Nervos CKB. The CoTA protocol is used to manage large amounts of data encoded in Sparse Merkle Tree (SMT) and then represented on-chain with a single 32-byte hash which proves data validity. An example of this is that any number of CoTA NFTs can be represented on-chain using only 32-bytes of data per user. This is a huge space savings which results in much lower fees. For more information on CoTA, please visit the [CoTA Developer Portal](https://www.cotadev.io/).
 
-import { Callout } from 'nextra/components'
+To sign a transaction and send a CoTA NFT with the user's JoyID session, complete the following steps.
 
-<Callout emoji="ℹ️" type="info">
-To learn more about the CoTA, please check the [CoTA Docs](https://www.cotadev.io/).
-</Callout>
+## Step 1: Save the User's JoyID Information
 
-
-You can use `@joyid/ckb` SDK to sign a transaction to send CoTA NFTs to others.
-
-To sign a transaction with the user's JoyID, we need to do the following steps:
-
-## Step 1: Save JoyID info
-
-In the [previous guide](/guide/ckb/connect), we have already connected the user with JoyID, and we have got the user's JoyID information. Now we need to save the user's JoyID information. We can save it in the local storage, or in the state of the React component, or in the Vuex store of the Vue app, etc.
+In the [connect guide](/guide/ckb/connect), we created a connection with JoyID and received the user's JoyID information. Now we need to retain this information so it can be used for signing. There are many ways this can be done, but we will demonstrate this below using a state variable of the React component and the Vuex store of the Vue app.
 
 import { FrameworkTabs } from '@/components/framework-tabs'
 
@@ -29,9 +20,12 @@ import { connect } from '@joyid/ckb'
 import './style.css'
 
 export default function App() {
+  const [joyidInfo, setJoyidInfo] = React.useState(null)
+
   const onConnect = async () => {
     try {
       const authData = await connect()
+      setJoyidInfo(setJoyidInfo)
       console.log(`JoyID user info:`, authData)
     } catch (error) {
       console.log(error)
@@ -61,10 +55,16 @@ import { connect } from '@joyid/ckb'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      joyidInfo: null,
+    }
+  },
   methods: {
     async connect() {
       try {
         const authData = await connect()
+        this.joyidInfo = authData
         console.log(`JoyID user info:`, authData)
       } catch (error) {
         console.log(error)
@@ -73,39 +73,32 @@ export default {
   },
 }
 ```
-
   </FrameworkTabs.Vue>
 </FrameworkTabs>
 
-
 ## Step 2: Claim CoTA NFTs
 
-You can connect your JoyID account and claim CoTA NFTs on the CKB Testnet from [Freeminter](https://free.nftbox.me/) for developing and testing later.
+In order to send a CoTA NFT, you must first have one on your account. The most easy way to get a free NFT on the testnet is to claim one from [Freeminter](https://free.nftbox.me/).
 
-<Callout emoji="ℹ️" type="info">
-The first time you connect JoyID account, it's required to create a new account with your FaceID, TouchID, or other biometric authentication.
-</Callout>
+Once you have claimed an NFT, you can view them on the [JoyID Testnet](https://testnet.joyid.dev/) by using the "Collectable" tab. 
 
-
-Once the NFTs are claimed to your JoyID account, you can visit NFT list in [JoyID App](https://app.joy.id). You can click any NFT to visit NFT detail page and the page URL is like this:
+If you click on any NFT on the Collectible tab, it will take you to the NFT detail page. The below is an example of what a URL will look like for the details page of an NFT.
 
 `https://testnet.joyid.dev/nft/ffffffff003688bb1cba009d89dd3f1c8a6027a0c5851e860000002e`
 
-The last path parameter `ffffffff003688bb1cba009d89dd3f1c8a6027a0c5851e860000002e` is **TokenKey** which is unique id for the CoTA NFT.
+Looking at the last path parameter `ffffffff003688bb1cba009d89dd3f1c8a6027a0c5851e860000002e`. This is the **TokenKey**, which is the unique ID for the CoTA NFT. We will need this TokenKey send an NFT.
 
 ## Step 3: Sign a CoTA NFT Transaction
 
-After the connection is complete, we need to add a `button` element and listen to the `click` event. When the user clicks the button, we will call the `signTransaction` to sign a transaction with the user's JoyID.
+Now that we have created a connection, claimed an NFT, and have the TokenKey for that NFT, we are ready to create and sign a transaction to send it to another address using the `signCotaNFTTx()` function. We add a couple fields for the required fields, and the sending address is taken from the JoyID information that was returned from `connect()`.
 
-If you want to send NFT to others firstly, you must have CoTA cell to manage NFT assets with SMT. In the JoyID web app, you will see an entry to upgrade your account to create CoTA cell for a few minutes.
-
-The entry looks like this:
+import { Callout } from 'nextra/components'
 
 <Callout emoji="ℹ️" type="info">
-The first time you send NFT, it's required to upgrade account. **Upgrade now**
+In order to send an NFT you must have a CoTA cell to manage your NFT assets. This allows CoTA to manage the user's SMT data on-chain. The most simple way to do this is to upgrade your JoyID account. You will be prompted to do so on the first time you try to send. This only needs to be done once.
 </Callout>
 
-Click the **Upgrade now** and then the CoTA cell will be created later automatically.
+The code below will create a signed transaction, but it does not broadcast it to the network. To do so you must use an RPC call to a CKB node. For more information on setting up a local node or using a public community node, please visit the [Nervos Docs Site](https://docs.nervos.org/).
 
 <FrameworkTabs>
   <FrameworkTabs.React>
@@ -204,16 +197,15 @@ export default {
 }
 </script>
 ```
-
   </FrameworkTabs.Vue>
 </FrameworkTabs>
 
 <Callout emoji="ℹ️" type="info">
-To learn more about the `signCotaNFTTx` function, please check the [API Reference](/apis/ckb/sign-cota-nft).
+To learn more about the `signCotaNFTTx()` function, please check the [API Reference](/apis/ckb/sign-cota-nft).
 </Callout>
 
 
-## Try it out
+## Try it Out
 
 <FrameworkTabs>
   <FrameworkTabs.React>
