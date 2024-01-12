@@ -6,9 +6,9 @@ import NodeCodeDoesNotBroadcast from './_shared/note-code-does-not-broadcast.mdx
 
 # Sign CoTA NFT Transaction
 
-In this guide we will create and sign a transaction to send a CoTA NFT using the `@joyid/ckb` SDK `signCotaNFTTx()` function.
+In this guide, we will create and sign a transaction to send a CoTA NFT using the `@joyid/ckb` SDK `signCotaNFTTx()` function.
 
-The CoTA (Compact Token Aggregator) protocol is a layer-1.5 account-based non-fungible token and data management solution on Nervos CKB. The CoTA protocol is used to manage large amounts of data encoded in Sparse Merkle Tree (SMT) and then represented on-chain with a single 32-byte hash which proves data validity. An example of this is that any number of CoTA NFTs can be represented on-chain using only 32-bytes of data per user. This is a huge space savings which results in much lower fees. For more information on CoTA, please visit the [CoTA Developer Portal](https://www.cotadev.io/).
+The CoTA (Compact Token Aggregator) protocol is a layer-1.5 account-based non-fungible token and data management solution on Nervos CKB. It manages large data volumes using Sparse Merkle Tree (SMT) encoding. This data is then represented on-chain via a single 32-byte hash, confirming data validity while using very little space. For instance, an unlimited amount of CoTA NFTs can be represented on-chain using just 32 bytes of data per user, leading to significant space savings and consequently lower fees. For additional information on CoTA, please visit the [CoTA Developer Portal](https://www.cotadev.io/).
 
 To sign a transaction and send a CoTA NFT with the user's JoyID session, complete the following steps.
 
@@ -16,7 +16,7 @@ To sign a transaction and send a CoTA NFT with the user's JoyID session, complet
 
 ## Step 2: Claim CoTA NFTs
 
-In order to send a CoTA NFT, you must first have one on your account. The most easy way to get a free NFT on the testnet is to claim one from [Freeminter](https://free.nftbox.me/).
+In order to send a CoTA NFT, you must first have one on your account. The easiest way to get a free NFT on the testnet is to claim one from [Freeminter](https://free.nftbox.me/).
 
 Once you have claimed an NFT, you can view them on the [JoyID Testnet](https://testnet.joyid.dev/) by using the "Collectable" tab. 
 
@@ -24,14 +24,14 @@ If you click on any NFT on the Collectible tab, it will take you to the NFT deta
 
 `https://testnet.joyid.dev/nft/ffffffff003688bb1cba009d89dd3f1c8a6027a0c5851e860000002e`
 
-Looking at the last path parameter `ffffffff003688bb1cba009d89dd3f1c8a6027a0c5851e860000002e`. This is the **TokenKey**, which is the unique ID for the CoTA NFT. We will need this TokenKey send an NFT.
+Looking at the last path parameter `ffffffff003688bb1cba009d89dd3f1c8a6027a0c5851e860000002e`. This is the **TokenKey**, which is the unique ID for the CoTA NFT. We will need this TokenKey to send an NFT.
 
 ## Step 3: Sign a CoTA NFT Transaction
 
-Now that we have created a connection, claimed an NFT, and have the TokenKey for that NFT, we are ready to create and sign a transaction to send it to another address using the `signCotaNFTTx()` function. We add a couple fields for the required fields, and the sending address is taken from the JoyID information that was returned from `connect()`.
+Now that we have established a connection, claimed an NFT, and obtained the TokenKey for that NFT, we are ready to proceed. Using the `signCotaNFTTx()` function, we'll create and sign a transaction to transfer the NFT. This involves specifying the recipient's address and the amount to be sent, while the sender's address is automatically retrieved from the previously acquired JoyID information.
 
 <Callout emoji="ℹ️" type="info">
-In order to send an NFT you must have a CoTA cell to manage your NFT assets. This allows CoTA to manage the user's SMT data on-chain. The most simple way to do this is to upgrade your JoyID account. You will be prompted to do so on the first time you try to send. This only needs to be done once.
+In order to send an NFT you must have a CoTA cell to manage your NFT assets. This allows CoTA to manage the user's SMT data on-chain. The simplest way to do this is to upgrade your JoyID account. You will be prompted to do so on the first time you try to send. This only needs to be done once.
 </Callout>
 
 <NodeCodeDoesNotBroadcast />

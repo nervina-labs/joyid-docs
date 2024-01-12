@@ -6,7 +6,7 @@ import NodeCodeDoesNotBroadcast from './_shared/note-code-does-not-broadcast.mdx
 
 # Sign Transaction
 
-In this guide we will create and sign a transaction to send CKB from one address to another using the `@joyid/ckb` SDK `signTransaction()` function.
+In this guide, we will create and sign a transaction to send CKB from one address to another using the `@joyid/ckb` SDK `signTransaction()` function.
 
 To sign a transaction and send CKB with the user's JoyID session, complete the following steps.
 
@@ -14,9 +14,9 @@ To sign a transaction and send CKB with the user's JoyID session, complete the f
 
 ## Step 2: Create and Sign a Transaction
 
-The next step after establishing a connection is to call the `signTransaction()` function. We add a couple fields for the to address and amount, and the from address is taken from the JoyID information that was returned from `connect()`.
+The next step after establishing a connection is to call the `signTransaction()` function. We add a few fields to specify the recipient's address and the amount to be sent, while the sender's address is automatically obtained from the JoyID information retrieved through the `connect()` function.
 
-The amount of CKB to send is always specified in a unit of Shannons. There are 100,000,000 Shannons in one CKB. If you do not have any CKB to send, you can claim some testnet CKB from the [Nervos Testnet Faucet](https://faucet.nervos.org/).
+The amount of CKB to send is always specified in a unit of Shannons. One CKB is equal to 100,000,000 Shannons. If you do not have any CKB to send, you can claim some testnet CKB from the [Nervos Testnet Faucet](https://faucet.nervos.org/).
 
 <NodeCodeDoesNotBroadcast />
 

@@ -6,9 +6,9 @@ import { FrameworkTabs } from '@/components/framework-tabs';
 
 In this guide, we will use the `@joyid/ckb` SDK `connect()` function to connect a dapp to the JoyID wallet and Nervos CKB network.
 
-Connecting your dapp to JoyID is always the first step before you can interact with a user's Nervos CKB address. This must be done before any other actions can be performed.
+Connecting your dapp to JoyID is always the first step before you can interact with a user's Nervos CKB address. This step must be completed before any other actions can be performed.
 
-Nervos CKB is a layer 1 public blockchain and the foundation of the Nervos Network ecosystem. For more information about Nervos Network, please visit the [Nervos Docs](https://docs.nervos.org/) website.
+Nervos CKB is a layer 1 public blockchain and the foundation of the Nervos Network ecosystem. For more information, please visit the [Nervos Docs](https://docs.nervos.org/) website.
 
 ## Initialization
 
@@ -43,6 +43,7 @@ import { initConfig } from "@joyid/ckb";
 import App from "./App.vue";
 import "./style.css";
 
+// Initialize JoyID configuration.
 initConfig({
   name: "JoyID demo",
   logo: "https://fav.farm/🆔",
@@ -91,7 +92,7 @@ export default {
 </FrameworkTabs.Vue>
 </FrameworkTabs>
 
-To connect with JoyID, we will add to our interface a `button` element and bind the `onClick` event to call the `connect()` function.
+To connect with JoyID, we will add to our interface a `button`, and bind the `onClick` event to call the `connect()` function.
 
 <FrameworkTabs>
 <FrameworkTabs.React>

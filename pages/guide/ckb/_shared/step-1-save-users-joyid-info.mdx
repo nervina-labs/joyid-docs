@@ -2,7 +2,7 @@ import { FrameworkTabs } from '@/components/framework-tabs';
 
 ## Step 1: Save the User's JoyID Information
 
-In the [connect guide](/guide/ckb/connect), we created a connection with JoyID and received the user's JoyID information. Now we need to retain this information so it can be used for signing. There are many ways this can be done, but we will demonstrate this below using a state variable of the React component and the Vuex store of the Vue app.
+In the [connect guide](/guide/ckb/connect), we established a connection with JoyID and obtained the user's JoyID information. It's essential to retain this information so it can be used in the signing process later on. There are many ways this can be done. Below, we demonstrate two common methods: using a state variable in a React component and employing the Vuex store in a Vue app.
 
 <FrameworkTabs>
 <FrameworkTabs.React>
@@ -17,7 +17,7 @@ export default function App() {
   const onConnect = async () => {
     try {
       const authData = await connect();
-      setJoyidInfo(setJoyidInfo);
+      setJoyidInfo(authData);
       console.log(`JoyID user info:`, authData);
     } catch (error) {
       console.error(error);

@@ -6,7 +6,9 @@ import Step1SaveUsersJoyidInfo from './_shared/step-1-save-users-joyid-info.mdx'
 
 # Sign Message
 
-In this guide we will use a JoyID connection to sign a message/challenge using the `@joyid/ckb` SDK `signChallenge()` function.
+In this guide, we will use a JoyID connection to sign a message/challenge using the `@joyid/ckb` SDK `signChallenge()` function.
+
+The most common reason for signing a message is to authorize a transaction. On CKB, the [Cell Model](https://docs.nervos.org/docs/basics/concepts/cell-model) is used for all smart contract transactions. Transactions are typically built using an SDK framework like [Lumos](https://docs.nervos.org/docs/basics/guides/SDK_examples/sdk_examples_lumos). SDKs are available for several languages including [JavaScript](https://docs.nervos.org/docs/basics/guides/SDK_examples/sdk_examples_lumos), [Rust](https://docs.nervos.org/docs/basics/guides/SDK_examples/sdk_examples_rust), [Go](https://docs.nervos.org/docs/basics/guides/SDK_examples/sdk_examples_go), and [Java](https://docs.nervos.org/docs/basics/guides/SDK_examples/sdk_examples_java). To learn how to program smart contracts using the Cell Model, please visit [CKB Academy](https://docs.nervos.org/docs/basics/guides/SDK_examples/sdk_examples_lumos).
 
 <CalloutChallengeVsMessage />
 
@@ -16,9 +18,9 @@ To sign a challenge with the user's JoyID session, complete the following steps.
 
 ## Step 2: Sign a Challenge
 
-The next step after establishing a connection is to call the `signChallenge()` function. To do this we add a `button` element with a `click` event handler to sign the challenge text contained in the `textarea` using the user's JoyID connection.
+The next step after establishing a connection is to call the `signChallenge()` function. To do this, add a `button` with a `click` event. This will sign the challenge text contained in the textarea using the user's JoyID connection.
 
-Note: In order to use the `signChallenge()` function, we must provide the address to sign with. This is why we specifically retained the user's JoyID information after establishing a connection, beucase it contains user's address.
+Note: In order to use the `signChallenge()` function, we must provide the address to sign with. This is why we specifically retained the user's JoyID information after establishing a connection, because it contains the user's address.
 
 <FrameworkTabs>
 <FrameworkTabs.React>
