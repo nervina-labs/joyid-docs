@@ -37,7 +37,7 @@ export default function App() {
       setJoyidInfo(authData);
       console.log(`JoyID user info:`, authData);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
   const onSign = async () => {
@@ -93,7 +93,7 @@ export default {
         this.joyidInfo = authData;
         console.log(`JoyID user info:`, authData);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
     async sign() {
@@ -119,10 +119,10 @@ To learn more about the `signChallenge()` function, please check the [API Refere
 <ClickToActivate>
   <FrameworkTabs>
     <FrameworkTabs.React>
-      <iframe className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-msg?embed=1&file=App.tsx&view=preview" />
+      <iframe className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-msg-my8aiy?embed=1&file=src%2FApp.tsx&view=preview" />
     </FrameworkTabs.React>
     <FrameworkTabs.Vue>
-      <iframe className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-msg?embed=1&file=App.vue&view=preview" />
+      <iframe className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-msg-uhg69m?embed=1&file=src%2FApp.vue&view=preview" />
     </FrameworkTabs.Vue>
   </FrameworkTabs>
 </ClickToActivate>

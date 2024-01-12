@@ -106,7 +106,7 @@ export default function App() {
       const authData = await connect();
       console.log(`JoyID user info:`, authData);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -139,7 +139,7 @@ export default {
         const authData = await connect();
         console.log(`JoyID user info:`, authData);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
   },
@@ -167,10 +167,10 @@ After establishing a connection, the `connect()` function will return the user's
 <ClickToActivate>
   <FrameworkTabs>
     <FrameworkTabs.React>
-      <iframe className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-connect?embed=1&file=App.tsx&view=preview" />
+      <iframe className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-connect-hc3kwc?embed=1&file=src%2FApp.tsx&view=preview" />
     </FrameworkTabs.React>
     <FrameworkTabs.Vue>
-      <iframe className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-connect?embed=1&file=App.vue&view=preview" />
+      <iframe className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-connect-tnr3yj?embed=1&file=src%2FApp.vue&view=preview" />
     </FrameworkTabs.Vue>
   </FrameworkTabs>
 </ClickToActivate>

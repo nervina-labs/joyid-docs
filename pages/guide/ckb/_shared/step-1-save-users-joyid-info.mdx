@@ -20,7 +20,7 @@ export default function App() {
       setJoyidInfo(setJoyidInfo);
       console.log(`JoyID user info:`, authData);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -59,7 +59,7 @@ export default {
         this.joyidInfo = authData;
         console.log(`JoyID user info:`, authData);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
   },

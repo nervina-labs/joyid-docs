@@ -37,7 +37,7 @@ export default function App() {
       const authData = await connect();
       setJoyidInfo(authData);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -98,7 +98,7 @@ export default {
         const authData = await connect();
         this.joyidInfo = authData;
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
     async sign() {
@@ -126,10 +126,10 @@ To learn more about the `signTransaction()` function, please check the [API Refe
 <ClickToActivate>
   <FrameworkTabs>
     <FrameworkTabs.React>
-      <iframe className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-tx?embed=1&file=App.tsx&view=preview" />
+      <iframe className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-tx-fhq27x?embed=1&file=src%2FApp.tsx&view=preview" />
     </FrameworkTabs.React>
     <FrameworkTabs.Vue>
-      <iframe className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-tx?embed=1&file=App.vue&view=preview" />
+      <iframe className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-tx-32ajqc?embed=1&file=src%2FApp.vue&view=preview" />
     </FrameworkTabs.Vue>
   </FrameworkTabs>
 </ClickToActivate>
