@@ -1,100 +1,43 @@
+import { Callout } from 'nextra/components';
+import { ClickToActivate } from '@/components/click-to-activate';
+import { FrameworkTabs } from '@/components/framework-tabs';
+import Step1SaveUsersJoyidInfo from './_shared/step-1-save-users-joyid-info.mdx';
+import NodeCodeDoesNotBroadcast from './_shared/note-code-does-not-broadcast.mdx';
+
 # Sign Transaction
 
-Once the connection is complete, we will get the user's JoyID information, such as address, public key, credential, etc. In this guide, we will continue our previous journey in [Connect](/guide/ckb/connect) by signing transactions to send CKB after the connection is complete.
+In this guide, we will create and sign a transaction to send CKB from one address to another using the `@joyid/ckb` SDK `signTransaction()` function.
 
-You can use `@joyid/ckb` SDK to sign a transaction to send CKB native token to others.
+To sign a transaction and send CKB with the user's JoyID session, complete the following steps.
 
-To sign a transaction with the user's JoyID, we need to do the following steps:
+<Step1SaveUsersJoyidInfo />
 
-## Step 1: Save JoyID info
+## Step 2: Create and Sign a Transaction
 
-In the [previous guide](/guide/ckb/connect), we have already connected the user with JoyID, and we have got the user's JoyID information. Now we need to save the user's JoyID information. We can save it in the local storage, or in the state of the React component, or in the Vuex store of the Vue app, etc.
+The next step after establishing a connection is to call the `signTransaction()` function. We add a few fields to specify the recipient's address and the amount to be sent, while the sender's address is automatically obtained from the JoyID information retrieved through the `connect()` function.
 
-import { FrameworkTabs } from '@/components/framework-tabs'
+The amount of CKB to send is always specified in a unit of Shannons. One CKB is equal to 100,000,000 Shannons. If you do not have any CKB to send, you can claim some testnet CKB from the [Nervos Testnet Faucet](https://faucet.nervos.org/).
 
-<FrameworkTabs>
-  <FrameworkTabs.React>
-```ts filename="App.tsx" /connect/
-import * as React from 'react'
-import { connect } from '@joyid/ckb'
-import './style.css'
-
-export default function App() {
-  const onConnect = async () => {
-    try {
-      const authData = await connect()
-      console.log(`JoyID user info:`, authData)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  return (
-    <div>
-      <h1>Hello JoyID!</h1>
-      <button onClick={onConnect}>Connect JoyID</button>
-    </div>
-  )
-}
-```
-  </FrameworkTabs.React>
-  <FrameworkTabs.Vue>
-```vue filename="App.vue" /connect/
-<template>
-  <div id="app">
-    <h1>Hello JoyID!</h1>
-    <button @click="connect">Connect JoyID</button>
-  </div>
-</template>
-
-<script>
-import { connect } from '@joyid/ckb'
-
-export default {
-  name: 'App',
-  methods: {
-    async connect() {
-      try {
-        const authData = await connect()
-        console.log(`JoyID user info:`, authData)
-      } catch (error) {
-        console.log(error)
-      }
-    },
-  },
-}
-```
-
-  </FrameworkTabs.Vue>
-</FrameworkTabs>
-
-
-## Step 2: Sign a Transaction
-
-After the connection is complete, we need to add a `button` element and listen to the `click` event. When the user clicks the button, we will call the `signTransaction` to sign a CKB transaction with the user's JoyID.
-
-Before sending CKB token to others, you can claim CKB token on Testnet from [CKB Faucet](https://faucet.nervos.org/) to your ckb address.
+<NodeCodeDoesNotBroadcast />
 
 <FrameworkTabs>
-  <FrameworkTabs.React>
-
+<FrameworkTabs.React>
 ```js filename="App.tsx" /signTransaction/
-import * as React from 'react'
-import { connect, signTransaction } from '@joyid/ckb'
-import './style.css'
+import * as React from 'react';
+import { connect, signTransaction } from '@joyid/ckb';
+import './style.css';
 
 export default function App() {
-  const [joyidInfo, setJoyidInfo] = React.useState(null)
-  const [toAddress, setToAddress] = React.useState(
-    'ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqxv6drphrp47xalweq9pvr6ll3mvkj225quegpcw',
-  )
-  const [amount, setAmount] = React.useState('100')
+  const [joyidInfo, setJoyidInfo] = React.useState(null);
+  const [toAddress, setToAddress] = React.useState('ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqxv6drphrp47xalweq9pvr6ll3mvkj225quegpcw');
+  const [amount, setAmount] = React.useState('100');
+
   const onConnect = async () => {
     try {
-      const authData = await connect()
-      setJoyidInfo(authData)
+      const authData = await connect();
+      setJoyidInfo(authData);
     } catch (error) {
-      console.log(error)
+      console.error(error);
     }
   }
 
@@ -103,8 +46,8 @@ export default function App() {
       to: toAddress,
       from: joyidInfo.address,
       amount: BigInt(Number(amount) * 10 ** 8).toString(),
-    })
-    console.log('signedTx', signedTx)
+    });
+    console.log('signedTx', signedTx);
     // You can use CKB RPC `sendTransaction` to send the `signedTx` to the blockchain.
   }
   return (
@@ -122,9 +65,8 @@ export default function App() {
   )
 }
 ```
-  </FrameworkTabs.React>
-  <FrameworkTabs.Vue>
-
+</FrameworkTabs.React>
+<FrameworkTabs.Vue>
 ```vue filename="App.vue" /signTransaction/
 <template>
   <div id="app">
@@ -139,7 +81,7 @@ export default function App() {
 </template>
 
 <script>
-import { connect, signTransaction } from '@joyid/ckb'
+import { connect, signTransaction } from '@joyid/ckb';
 
 export default {
   name: 'App',
@@ -148,15 +90,15 @@ export default {
       joyidInfo: null,
       toAddress: 'ckt1qrfrwcdnvssswdwpn3s9v8fp87emat306ctjwsm3nmlkjg8qyza2cqgqqxv6drphrp47xalweq9pvr6ll3mvkj225quegpcw',
       amount: '100',
-    }
+    };
   },
   methods: {
     async connect() {
       try {
-        const authData = await connect()
-        this.joyidInfo = authData
+        const authData = await connect();
+        this.joyidInfo = authData;
       } catch (error) {
-        console.log(error)
+        console.error(error);
       }
     },
     async sign() {
@@ -164,32 +106,30 @@ export default {
         to: this.toAddress,
         from: this.joyidInfo.address,
         amount: BigInt(Number(amount) * 10 ** 8).toString(),
-      })
-      console.log('signedTx', signedTx)
+      });
+      console.log('signedTx', signedTx);
       // You can use CKB RPC `sendTransaction` to send the `signedTx` to the blockchain.
     },
   },
 }
 </script>
 ```
-  </FrameworkTabs.Vue>
+</FrameworkTabs.Vue>
 </FrameworkTabs>
-
-
-import { Callout } from 'nextra/components'
 
 <Callout emoji="💡">
-To learn more about the `signTransaction` function, please check the [API Reference](/apis/ckb/sign-tx).
+To learn more about the `signTransaction()` function, please check the [API Reference](/apis/ckb/sign-tx).
 </Callout>
 
+## Try it Out
 
-## Try it out
-
-<FrameworkTabs>
-  <FrameworkTabs.React>
-    <iframe  className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-tx?embed=1&file=App.tsx&view=preview" ></iframe>
-  </FrameworkTabs.React>
-  <FrameworkTabs.Vue>
-    <iframe  className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-tx?embed=1&file=App.vue&view=preview" ></iframe>
-  </FrameworkTabs.Vue>
-</FrameworkTabs>
+<ClickToActivate>
+  <FrameworkTabs>
+    <FrameworkTabs.React>
+      <iframe className="sandbox" src="https://stackblitz.com/edit/react-joyid-ckb-sign-tx-fhq27x?embed=1&file=src%2FApp.tsx&view=preview" />
+    </FrameworkTabs.React>
+    <FrameworkTabs.Vue>
+      <iframe className="sandbox" src="https://stackblitz.com/edit/vue-joyid-ckb-sign-tx-32ajqc?embed=1&file=src%2FApp.vue&view=preview" />
+    </FrameworkTabs.Vue>
+  </FrameworkTabs>
+</ClickToActivate>

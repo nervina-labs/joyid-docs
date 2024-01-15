@@ -1,0 +1,10 @@
+import { Callout } from 'nextra/components';
+
+<Callout emoji="ℹ️" type="info">
+Understanding the difference between a `challenge` and a `message`.
+
+A `challenge` is what you as a developer need JoyID to sign.
+A `message` is the piece of data that JoyID actually signs. A `message` is a combination of a `challenge` and some other data needed to complete the process, such as authenticator data, etc. The `challenge` is always included within the `message`.
+
+For more information, you can check out the [WebAuthn Spec](https://www.w3.org/TR/webauthn-2/#sctn-op-get-assertion).
+</Callout>

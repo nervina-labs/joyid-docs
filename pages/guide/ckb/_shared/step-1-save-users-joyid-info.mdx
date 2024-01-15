@@ -1,0 +1,69 @@
+import { FrameworkTabs } from '@/components/framework-tabs';
+
+## Step 1: Save the User's JoyID Information
+
+In the [connect guide](/guide/ckb/connect), we established a connection with JoyID and obtained the user's JoyID information. It's essential to retain this information so it can be used in the signing process later on. There are many ways this can be done. Below, we demonstrate two common methods: using a state variable in a React component and employing the Vuex store in a Vue app.
+
+<FrameworkTabs>
+<FrameworkTabs.React>
+```ts filename="App.tsx" /connect/
+import * as React from 'react';
+import { connect } from '@joyid/ckb';
+import './style.css';
+
+export default function App() {
+  const [joyidInfo, setJoyidInfo] = React.useState(null);
+
+  const onConnect = async () => {
+    try {
+      const authData = await connect();
+      setJoyidInfo(authData);
+      console.log(`JoyID user info:`, authData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  return (
+    <div>
+      <h1>Hello JoyID!</h1>
+      <button onClick={onConnect}>Connect JoyID</button>
+    </div>
+  );
+}
+```
+</FrameworkTabs.React>
+<FrameworkTabs.Vue>
+```vue filename="App.vue" /connect/
+<template>
+  <div id="app">
+    <h1>Hello JoyID!</h1>
+    <button @click="connect">Connect JoyID</button>
+  </div>
+</template>
+
+<script>
+import { connect } from '@joyid/ckb';
+
+export default {
+  name: 'App',
+  data() {
+    return {
+      joyidInfo: null,
+    }
+  },
+  methods: {
+    async connect() {
+      try {
+        const authData = await connect();
+        this.joyidInfo = authData;
+        console.log(`JoyID user info:`, authData);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+}
+```
+</FrameworkTabs.Vue>
+</FrameworkTabs>
