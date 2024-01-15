@@ -1,0 +1,151 @@
+# Web2 Login
+
+JoyID Web2 login allow you to login to your website using JoyID account. It is a simple and secure way to login to your website without the need to remember password.
+
+## Installation
+
+import { PackageManagerTabs } from '@/components/npm-tabs'
+
+<PackageManagerTabs command="install @joyid/evm" />
+
+
+## Initialization
+
+Before writing business code, you can call the initialization function `initConfig` on the project entry file. `initConfig` function take a configuration object as parameter. The configuration object has the following properties:
+
+- `backgroundImage`: Background image that will be shown on JoyID app, this parameter is followed by the [CSS background property ↗](https://developer.mozilla.org/en-US/docs/Web/CSS/background)
+- `joyidAppURL`: JoyID app url that your app is integrated with
+
+<Callout type="info">
+The `joyidAppURL` parameter of `initConfig()` is the JoyID App URL that your app will connect to.
+  - Testnet: https://testnet.joyid.dev
+  - Mainnet: https://app.joy.id
+</Callout>
+
+import { Callout } from 'nextra/components'
+
+<Callout emoji="💡">
+Note that to using Web2 login, you need to import function from **`@joyid/evm/web2login`** instead of **`@joyid/evm`**.
+</Callout>
+
+import { FrameworkTabs } from '@/components/framework-tabs'
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```ts filename="main.tsx" /initConfig/
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { initConfig } from "@joyid/evm/web2login";
+import App from "./App";
+import "./index.css";
+
+initConfig({
+  // background image that will be shown on JoyID app
+  // this parameter is followed by the CSS background property
+  // ref: https://developer.mozilla.org/en-US/docs/Web/CSS/background
+  backgroundImage: 'center center / cover no-repeat url("https://images.unsplash.com/photo-1601314167099-232775b3d6fd?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
+  // JoyID app url that your app is integrated with
+  joyidAppURL: "https://testnet.joyid.dev",
+});
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```ts filename="main.ts" /initConfig/
+import { createApp } from "vue";
+import "./style.css";
+import App from "./App.vue";
+import { initConfig } from "@joyid/evm/web2login";
+
+initConfig({
+  // background image that will be shown on JoyID app
+  // this parameter is followed by the CSS background property
+  // ref: https://developer.mozilla.org/en-US/docs/Web/CSS/background
+  // JoyID app url that your app is integrated with
+  joyidAppURL: "https://testnet.joyid.dev",
+});
+
+createApp(App).mount("#app");
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+## Connect to JoyID
+
+After initialization, you can call the `connect` function to connect to JoyID. The `connect` function returns a `Promise`, which will be resolved to `uid` and `entropy` when the connection is successful.
+
+-  `uid`: This is a unique identifier specific to each user.
+-  `entropy`: The `entropy` value remains the same every time the user logs in.
+
+The `connect` function takes an optional `uid` parameter. If `uid` is provided, JoyID will use this specified `uid` to sign and return the corresponding `entropy`.
+
+Otherwise, if no `uid` is provided, JoyID will prompt the user either to create an account or to login with an existing one, then sign and returning the `entropy`.
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```tsx filename="App.tsx" /connect/
+import { connect } from '@joyid/evm/web2login'
+export default function App() {
+  const [response, setResponse] = React.useState();
+  const onConnect = async () => {
+    try {
+      const res = await connect(/* uid is optional */);
+      setResponse(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div id="app">
+      <button className="btn btn-primary" onClick={onConnect}>
+        Connect JoyID
+      </button>
+    </div>
+  );
+}
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="App.vue" /connect/
+<template>
+  <div id="app">
+    <button class="btn btn-primary" @click="onConnect">
+      Connect JoyID
+    </button>
+  </div>
+</template>
+
+<script lang="ts">
+import { ref } from "vue";
+import { connect } from "@joyid/evm/web2login";
+
+export default {
+  setup() {
+    const response = ref(null);
+
+    const onConnect = async () => {
+      try {
+        const res = await connect(/* uid is optional */);
+        response.value = res;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    return { response, onConnect };
+  },
+};
+</script>
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+
+## Try it out
+
+For a complete demo, you may want to check [GitHub ↗](https://github.com/nervina-labs/joyid-evm-web2login-demo) and [Live Demo ↗](https://joyid-evm-web2login-demo.vercel.app/).
