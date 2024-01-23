@@ -1,0 +1,260 @@
+# EVM AA(Account Abstraction)
+
+JoyID EVM AA allow you to create EVM-compatible AA(Account Abstraction) wallets easily for your users with JoyID Passkey Wallet. You can use JoyIDSigner to generate an Ethereum provider with `@joyid/evm` SDK quickly.
+
+## Installation
+
+import { PackageManagerTabs } from '@/components/npm-tabs'
+
+<PackageManagerTabs command="install @joyid/evm" />
+
+
+## Initialization
+
+Before writing business code, you can call the initialization function `initConfig` on the project entry file:
+
+<Callout type="info">
+The `joyidAppURL` parameter of `initConfig()` is the JoyID App URL that your app will connect to.
+  - Testnet: https://testnet.joyid.dev
+  - Mainnet: https://app.joy.id
+</Callout>
+
+import { FrameworkTabs } from '@/components/framework-tabs'
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```ts filename="main.tsx" /initConfig/
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { initConfig } from "@joyid/evm";
+import App from "./App";
+import "./index.css";
+
+initConfig({
+  // name of your app
+  name: "JoyID demo",
+  // logo of your app
+  logo: "https://fav.farm/🆔",
+  // JoyID app url that your app is integrated with
+  joyidAppURL: "https://testnet.joyid.dev",
+});
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```ts filename="main.ts" /initConfig/
+import { createApp } from "vue";
+import "./style.css";
+import App from "./App.vue";
+import { initConfig } from "@joyid/evm";
+
+initConfig({
+  // name of your app
+  name: "JoyID demo",
+  // logo of your app
+  logo: "https://fav.farm/🆔",
+  // JoyID app url that your app is integrated with
+  joyidAppURL: "https://testnet.joyid.dev",
+});
+
+createApp(App).mount("#app");
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+## Connect to JoyID
+
+After initialization, you can call the `connect` function to connect to JoyID. The `connect` function returns a `Promise`, which will be resolved to a EVM address when the connection is successful.
+
+import { Callout } from 'nextra/components'
+
+<Callout emoji="💡">
+After a successful connection, JoyID persists the connection status to the local storage.
+</Callout>
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```tsx filename="App.tsx" /connect/
+import { connect } from '@joyid/evm'
+export default function App() {
+  const [address, setAddress] = React.useState<Address | undefined>();
+  const onConnect = async () => {
+    try {
+      const res = await connect();
+      setAddress(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div id="app">
+      <button className="btn btn-primary" onClick={onConnect}>
+        Connect JoyID
+      </button>
+    </div>
+  );
+}
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="App.vue" /connect/
+<template>
+  <div id="app">
+    <button class="btn btn-primary" @click="onConnect">
+      Connect JoyID
+    </button>
+  </div>
+</template>
+
+<script lang="ts">
+import { ref } from "vue";
+import { connect } from "@joyid/evm";
+
+export default {
+  setup() {
+    const address = ref(null);
+
+    const onConnect = async () => {
+      try {
+        const res = await connect();
+        address.value = res;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    return { address, onConnect };
+  },
+};
+</script>
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+## Create AA wallets
+
+You can easily create AA wallets with JoyID Ethereum address and JoyIDSigner.
+
+<Callout emoji="💡">
+Note that to using EVM AA, you need to import function from **`@joyid/evm/aa`** instead of **`@joyid/evm`**.
+</Callout>
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```tsx filename="App.tsx" /connect/
+import { JoyIDSigner } from "@joyid/evm/aa";
+import { ECDSAProvider } from "@zerodev/sdk";
+import { Hex } from "viem";
+
+const initAAProvider = async (ethAddress: Hex) => {
+  return await ECDSAProvider.init({
+    projectId: ZERO_DEV_PROJECT_ID,
+    owner: new JoyIDSigner(ethAddress),
+  });
+};
+
+export default function App() {
+  const [address, setAddress] = React.useState<Address | undefined>();
+  const [aaAddress, setAaAddress] = React.useState<Address | undefined>();
+
+  const onConnect = async () => {
+    try {
+      const res = await connect();
+      setAddress(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  useEffect(() => {
+    initAAProvider(address as Hex).then(setProvider)
+  }, [ethAddress]); 
+
+  const createAAWallet = async () => {
+    const aaAddr = await provider?.getAddress();
+    updateAaAddress(aaAddr);
+  };
+
+  return (
+    <div id="app">
+      <button className="btn btn-primary" onClick={onConnect}>
+        Connect JoyID
+      </button>
+
+      {address && (
+        <button className="btn btn-primary" onClick={createAAWallet}>
+          Create AA Account
+        </button>
+
+        {aaAddress && <div>{`AA Address: ${aaAddress}`}</div>}
+      )}
+    </div>
+  );
+}
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="App.vue" /connect/
+<template>
+  <div id="app">
+    <button class="btn btn-primary" @click="onConnect">
+      Connect JoyID
+    </button>
+
+    <div v-if="address" class="w-full">
+      <button className="btn btn-primary" click="createAAWallet">
+        Create AA Account
+      </button>
+
+       <div v-if="aaAddress" class="w-full">
+          <span>"aaAddress"</span>
+       </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { JoyIDSigner } from "@joyid/evm/aa";
+import { ECDSAProvider } from "@zerodev/sdk";
+import { Hex } from "viem";
+
+export default {
+  setup() {
+    const address = ref(null);
+    const provider = ref(null);
+    const aaAddress = ref(null);
+
+    const onConnect = async () => {
+      try {
+        const res = await connect();
+        address.value = res;
+
+        provider.value = await ECDSAProvider.init({
+          projectId: ZERO_DEV_PROJECT_ID,
+          owner: new JoyIDSigner(res),
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const createAAWallet = async () => {
+      aaAddress.value = await provider.value.getAddress();
+    };
+
+    return { address, onConnect, aaAddress, createAAWallet };
+  },
+};
+</script>
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+## Try it out
+
+For a complete demo, you may want to check [GitHub ↗](https://github.com/nervina-labs/joyid-evm-aa-demo) and [Live Demo ↗](https://joyid-evm-aa-demo.vercel.app/).
