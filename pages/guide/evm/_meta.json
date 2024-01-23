@@ -4,5 +4,6 @@
   "sign-typed-data": "Sign Typed Data",
   "send-transaction": "Send Transaction",
   "web2-login": "Web2 Login",
+  "evm-aa": "EVM AA",
   "adapters": "Adapters"
 }
