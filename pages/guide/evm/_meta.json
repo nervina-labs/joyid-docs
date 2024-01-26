@@ -3,6 +3,7 @@
   "sign-message": "Sign Message",
   "sign-typed-data": "Sign Typed Data",
   "send-transaction": "Send Transaction",
+  "manage-network": "Manage Network",
   "web2-login": "Web2 Login",
   "evm-aa": "EVM AA",
   "adapters": "Adapters"

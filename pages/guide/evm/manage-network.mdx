@@ -1,0 +1,111 @@
+# Manage network
+
+JoyID is an EVM compatible wallet that supports multiple networks, user or developer can add custom networks or switch to other network in JoyID.
+
+## Add custom network
+
+To add a custom network, you need to provide following information:
+
+```ts
+interface EvmChainParameter {
+  chainId: number
+  name?: string
+  nativeCurrency?: {
+    name: string
+    symbol: string
+    decimals: number
+  }
+  rpcUrls?: readonly string[]
+  blockExplorerUrls?: string[]
+}
+```
+
+Then pass the parameter to `initConfig` method:
+
+```js
+import { initConfig } from '@joyid/evm'
+
+initConfig({
+  network: {
+    chainId: 128,
+    name: 'Huobi ECO Chain',
+    nativeCurrency: {
+      name: 'Huobi ECO Chain Native Token',
+      symbol: 'HT',
+      decimals: 18
+    },
+    rpcUrls: ['https://http-mainnet.hecochain.com'],
+    blockExplorerUrls: ['https://scan.hecochain.com']
+  }
+})
+```
+
+And when next JoyID interaction(like connect, sign message/typed data/tx) happens, a prompt will show up to ask user to approve to add the new network. If the network is added previously, the prompt will not show up.
+
+Note that in the `EvmChainParameter`, only `chainId` is required, if other fields are not provided, JoyID will find the information from [Ethereum Chainlist](https://github.com/ethereum-lists/chains). If you want to add a network that is not in the Chainlist, or add custom RPC url, you need to provide all the information.
+
+import { Callout } from 'nextra/components'
+
+<Callout type="info">
+If you are using our EVM SDK adapter, like `@joyid/ethers`, `@joyid/wagmi`, `@joyid/rainbowkit`, you don't need to do anything, the adapter will do it automatically.
+</Callout>
+
+
+## Switch network
+
+To switch network, you need to call `initConfig` method, and pass the `chainId` of the network you want to switch to:
+
+```js
+import { initConfig } from '@joyid/evm'
+
+initConfig({
+  network: {
+    // switch to Ethereum mainnet
+    chainId: 1,
+  }
+})
+```
+
+JoyID will not show a prompt to ask user to approve the switch, but if the network is not added previously, JoyID will show a prompt to ask user to approve to add the new network.
+
+<Callout type="info">
+If you are using our EVM SDK adapter, like `@joyid/ethers`, `@joyid/wagmi`, `@joyid/rainbowkit`, you don't need to do anything, the adapter will do it automatically.
+</Callout>
+
+
+## Why not provide a specific API to add/switch network?
+
+### User Experience
+
+JoyID is a web-based wallet, which means that every time Dapp interacts with JoyID, it pops up or redirect to JoyID web page where the user performs an action, then the web page closes and Dapp gets the result of the user's action. Specifically: If Dapp needs to add a network to a new user, in a plugin-based wallet, the user needs to perform three actions:
+
+1. Allow connection
+2. Allow the network to be added
+3. Allow network switching
+
+If JoyID do the same thing, the user would have to make THREE popups or THREE redirect, which would seriously damage the user experience. So we simplify the process of adding/switching networks, only need the user to open the JoyID webpage once, to complete add network and perform authorization operations.
+
+### Developer Experience
+
+Most Dapps that interact with JoyID use Popup to open JoyID page, but Popup can only be triggered by real user behavior, so calling the `connect` and `switchNetwork` methods consecutively in a single function will cause the second method to fail:
+
+```js
+function onClickConnectWallet() {
+  const address = await connect()
+  // this won't work, browser will block the popup
+  const network = await addNetwork({
+    // network info
+  })
+}
+```
+
+If we had provided `addNetwork` or `switchNetwork` methods, the user would have needed to bind an `onClick` event for each action, which would have made the developer's code complex and would have increased the user's cost of operation.
+
+In addition, our earlier versions of JoyID did not allow developers to add custom networks, and JoyID SDK did not provide `addNetwork` or `switchNetwork` methods. In order to be compatible with earlier versions of JoyID, we will not add these methods to increase the cost of migration for developers.
+
+So for early developers of JoyID, you can add support for custom networks even if you don't update the JoyID SDK version.
+
+
+## Try it out
+
+You can try it out in our [JoyID EVM Demo](https://joyid-evm-demo.vercel.app/), select `BNB` or `AVAX` then connect/sign message/typed data/tx to see what happens.
