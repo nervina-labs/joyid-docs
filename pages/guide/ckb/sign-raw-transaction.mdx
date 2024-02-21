@@ -1,0 +1,304 @@
+# Sign CKB Raw Transaction
+
+In this guide, we will create and sign a ckb raw transaction using the `@joyid/ckb` SDK `signRawTransaction()` function.
+
+## Installation
+
+import { PackageManagerTabs } from '@/components/npm-tabs'
+
+<PackageManagerTabs command="install @joyid/ckb" />
+
+
+## Initialization
+
+Before writing business code, you can call the initialization function `initConfig` on the project entry file:
+
+<Callout type="info">
+The `joyidAppURL` parameter of `initConfig()` is the JoyID App URL that your app will connect to.
+  - Testnet: https://testnet.joyid.dev
+  - Mainnet: https://app.joy.id
+</Callout>
+
+import { FrameworkTabs } from '@/components/framework-tabs'
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```ts filename="main.tsx" /initConfig/
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { initConfig } from "@joyid/ckb";
+import App from "./App";
+import "./index.css";
+
+initConfig({
+  // name of your app
+  name: "JoyID demo",
+  // logo of your app
+  logo: "https://fav.farm/🆔",
+  // JoyID app url that your app is integrated with
+  joyidAppURL: "https://testnet.joyid.dev",
+});
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```ts filename="main.ts" /initConfig/
+import { createApp } from "vue";
+import "./style.css";
+import App from "./App.vue";
+import { initConfig } from "@joyid/ckb";
+
+initConfig({
+  // name of your app
+  name: "JoyID demo",
+  // logo of your app
+  logo: "https://fav.farm/🆔",
+  // JoyID app url that your app is integrated with
+  joyidAppURL: "https://testnet.joyid.dev",
+});
+
+createApp(App).mount("#app");
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+## Connect to JoyID
+
+After initialization, you can call the `connect` function to connect to JoyID. The `connect` function returns a `Promise`, which will be resolved to a EVM address when the connection is successful.
+
+import { Callout } from 'nextra/components'
+
+<Callout emoji="💡">
+After a successful connection, JoyID persists the connection status to the local storage.
+</Callout>
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```tsx filename="App.tsx" /connect/
+import { connect } from '@joyid/ckb'
+export default function App() {
+  const [joyidInfo, setJoyidInfo] = React.useState(null);
+  const onConnect = async () => {
+    try {
+      const authData = await connect();
+      setJoyidInfo(authData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div id="app">
+      <button className="btn btn-primary" onClick={onConnect}>
+        Connect JoyID
+      </button>
+    </div>
+  );
+}
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="App.vue" /connect/
+<template>
+  <div id="app">
+    <button class="btn btn-primary" @click="onConnect">
+      Connect JoyID
+    </button>
+  </div>
+</template>
+
+<script lang="ts">
+import { ref } from "vue";
+import { connect } from "@joyid/ckb";
+
+export default {
+  setup() {
+    const joyidInfo = ref(null);
+
+    const onConnect = async () => {
+      try {
+        const authData = await connect();
+        joyidInfo.value = authData;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    return { joyidInfo, onConnect };
+  },
+};
+</script>
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+## Sign CKB raw transaction
+
+You can easily sign ckb raw transaction with `signRawTransaction` function. We will use [Omiga Inscription](https://omiga.io/) as an example to show how to use `joyid/ckb` SDK to sign ckb raw transactions
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```tsx filename="App.tsx" /connect/
+import {
+  CKBTransaction,
+  ConnectResponseData,
+  signRawTransaction,
+} from '@joyid/ckb'
+import {
+  Aggregator,
+  Collector,
+  InscriptionInfo,
+  JoyIDConfig,
+  NoLiveCellException,
+  buildDeployTx,
+  buildMintTx,
+  buildTransferTx,
+} from 'ckb-omiga'
+import { CKB_INDEXER_URL, CKB_RPC_URL, COTA_AGGREGATOR_URL } from './env'
+
+const info: InscriptionInfo = {
+  maxSupply: BigInt(2100_0000),
+  mintLimit: BigInt(1000),
+  xudtHash: '',
+  mintStatus: 0,
+  decimal: 8,
+  name: 'CKB Fist Inscription',
+  symbol: 'CKBI',
+}
+const collector = new Collector({
+  ckbNodeUrl: CKB_RPC_URL,
+  ckbIndexerUrl: CKB_INDEXER_URL,
+})
+const aggregator = new Aggregator(COTA_AGGREGATOR_URL)
+
+export default function App() {
+   const [joyidInfo, setJoyidInfo] = React.useState(null);
+
+   const joyID: JoyIDConfig = {
+    aggregator,
+    connectData: joyidInfo as ConnectResponseData,
+  }
+
+  const onConnect = async () => {
+    try {
+      const authData = await connect();
+      setJoyidInfo(authData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  const deploy = async () => {
+    try {
+      const { rawTx } = await buildDeployTx({
+        collector,
+        joyID,
+        address: joyidInfo.address,
+        info,
+      })
+      const signedTx = await signRawTransaction(
+        rawTx as CKBTransaction,
+        joyidInfo.address
+      )
+      const hash = await collector.getCkb().rpc.sendTransaction(signedTx)
+      alert(hash)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  return (
+    <div>
+      <h1>Hello JoyID!</h1>
+      {joyidInfo ? null : <button onClick={onConnect}>Connect JoyID</button>}
+      {joyidInfo ? (
+        <div>
+          <button onClick={deploy}>Deploy Inscription</button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```vue filename="App.vue" /connect/
+<template>
+  <div id="app">
+    <button class="btn btn-primary" @click="onConnect">
+      Connect JoyID
+    </button>
+
+    <div v-if="address" class="w-full">
+      <button className="btn btn-primary" click="deploy">
+        Deploy Inscription
+      </button>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import {
+  CKBTransaction,
+  ConnectResponseData,
+  signRawTransaction,
+} from '@joyid/ckb'
+import {
+  Aggregator,
+  Collector,
+  InscriptionInfo,
+  JoyIDConfig,
+  NoLiveCellException,
+  buildDeployTx,
+  buildMintTx,
+  buildTransferTx,
+} from 'ckb-omiga'
+import { CKB_INDEXER_URL, CKB_RPC_URL, COTA_AGGREGATOR_URL } from './env'
+
+export default {
+  setup() {
+    const joyidInfo = ref(null);
+
+    const onConnect = async () => {
+    try {
+      const authData = await connect();
+      joyidInfo.value = authData
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  const deploy = async () => {
+    try {
+      const { rawTx } = await buildDeployTx({
+        collector,
+        joyID,
+        address: joyidInfo.address,
+        info,
+      })
+      const signedTx = await signRawTransaction(
+        rawTx as CKBTransaction,
+        joyidInfo.address
+      )
+      const hash = await collector.getCkb().rpc.sendTransaction(signedTx)
+      alert(hash)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+    return { joyidInfo, onConnect, deploy };
+  },
+};
+</script>
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+## Try it out
+
+For a complete demo, you may want to check [Live Demo ↗](https://joyid-demo.vercel.app/).

@@ -3,5 +3,7 @@
   "connect": "connect",
   "sign": "signChallenge",
   "sign-tx": "signTransaction",
-  "sign-cota": "signCotaNFTTx"
+  "sign-cota": "signCotaNFTTx",
+  "sign-raw-tx": "signRawTransaction"
+
 }
