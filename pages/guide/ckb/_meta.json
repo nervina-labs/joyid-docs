@@ -4,5 +4,5 @@
   "verify-message": "Verify Message",
   "sign-transaction": "Sign Transaction",
   "sign-cota": "Sign Cota NFT Transaction",
-  "sign-raw-tx": "Sign Raw Transaction"
+  "sign-raw-transaction": "Sign Raw Transaction"
 }
