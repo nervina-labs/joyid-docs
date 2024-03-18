@@ -1,0 +1,52 @@
+# signPsbt
+
+This method will traverse all inputs that match the current address to sign.
+
+## Parameters
+
+- psbtHex - string: the hex string of psbt to sign
+- options
+  - autoFinalized - boolean: whether finalize psbt after signing, default is true
+  - toSignInputs - array:
+  - index - `number`: which input to sign
+  - address - `string`: (at least specify either an address or a publicKey) Which corresponding private key to use for signing
+  - publicKey - `string`: (at least specify either an address or a publicKey) Which corresponding private key to use for signing
+  - sighashTypes - `number[]`: (optionals) sighashTypes
+  - disableTweakSigner - `boolean` :(optionals) When signing and unlocking Taproot addresses, the tweakSigner is used by default for signature generation. Enabling this allows for signing with the original private key.
+
+## Returns
+
+`Promise<string>`: the hex string of signed psbt
+
+## Example
+
+```js
+try {
+  let res = await signPsbt(
+    "70736274ff01007d....",
+    {
+        autoFinalized:false,
+        toSignInputs:[
+          {
+            index: 0,
+            address: "tb1q8h8....mjxzny",
+          },
+          {
+            index: 1,
+            publicKey: "tb1q8h8....mjxzny",
+            sighashTypes: [1]
+          },
+          {
+            index: 2,
+            publicKey: "02062...8779693f",
+          }
+        ]
+    }
+  );
+  console.log(res)
+} catch (e) {
+  console.log(e);
+}
+
+unisat.signPsbt("xxxxxxxx",{toSignInputs:[{index:0,publicKey:"xxxxxx",disableTweakSigner:true}],autoFinalized:false})
+```

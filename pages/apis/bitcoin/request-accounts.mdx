@@ -1,0 +1,22 @@
+# requestAccounts
+
+Connect the current account.
+
+## Parameters
+
+none
+
+## Returns
+
+`Promise<string[]>`: Address of current account.
+
+## Example
+
+```ts
+try {
+  let accounts = await requestAccounts();
+  console.log('connect success', accounts);
+} catch (e) {
+  console.log('connect failed');
+}
+```

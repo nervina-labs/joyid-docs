@@ -1,0 +1,82 @@
+# `initConfig`
+
+`initConfig` is a function that init the configuration for the JoyID SDK. You should call config function in your app's entry file to set the configuration.
+
+## Types
+
+```typescript
+function initConfig(config?: DappConfig): DappConfig
+
+interface DappConfig {
+  /**
+   * The name of your app
+   */
+  name?: string
+  /**
+   * The logo of your app
+   */
+  logo?: string
+  /**
+   * The URL of JoyID app url that your app is integrated with, defaults to https://app.joyid.dev
+   */
+  joyidAppURL?: string
+  /**
+   * The bitcoin address type you want to connect with, defaults to p2tr
+   */
+  requestAddressType?: 'p2wpkh' | 'p2tr'
+}
+```
+
+## Example
+
+import { FrameworkTabs } from '@/components/framework-tabs'
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```ts filename="main.tsx" /initConfig/
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { initConfig } from "@joyid/bitcoin";
+import App from "./App";
+import "./index.css";
+
+initConfig({
+  // your app name
+  name: "JoyID demo",
+  // your app logo
+  logo: "https://fav.farm/🆔",
+  // JoyID app URL, this is for testnet, for mainnet, use "https://app.joy.id"
+  joyidAppURL: "https://testnet.joyid.dev",
+  // bitcoin address type, p2wpkh or p2tr
+  requestAddressType: 'p2tr',
+});
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```ts filename="main.ts" /initConfig/
+import { createApp } from "vue";
+import "./style.css";
+import App from "./App.vue";
+import { initConfig } from "@joyid/nostr";
+
+initConfig({
+  // your app name
+  name: "JoyID demo",
+  // your app logo
+  logo: "https://fav.farm/🆔",
+  // JoyID app URL, this is for testnet, for mainnet, use "https://app.joy.id"
+  joyidAppURL: "https://testnet.joyid.dev",
+  // bitcoin address type, p2wpkh or p2tr
+  requestAddressType: 'p2tr',
+});
+
+createApp(App).mount("#app");
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>

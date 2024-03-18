@@ -1,0 +1,136 @@
+# Bitcoin SDK
+
+In this integration guide, we will show you how to connect JoyID, sign message, and sign transaction with `@joyid/bitcoin`. `@joyid/bitcoin` has almost idential API as [UniSat Wallet API](https://docs.unisat.io/dev/unisat-developer-service/unisat-wallet), if you are familiar with UniSat Wallet API, you can easily use `@joyid/bitcoin`.
+
+## Installation
+
+import { PackageManagerTabs } from '@/components/npm-tabs'
+
+<PackageManagerTabs command="install @joyid/bitcoin" />
+
+## Initialization
+
+Before writing business code, you can call the initialization function `initConfig` on the project entry file:
+
+import { FrameworkTabs } from '@/components/framework-tabs'
+
+<FrameworkTabs>
+  <FrameworkTabs.React>
+```ts filename="main.tsx" /initConfig/
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { initConfig } from "@joyid/bitcoin";
+import App from "./App";
+import "./index.css";
+
+initConfig({
+  // your app name
+  name: "JoyID demo",
+  // your app logo
+  logo: "https://fav.farm/🆔",
+  // JoyID app URL, this is for testnet, for mainnet, use "https://app.joy.id"
+  joyidAppURL: "https://testnet.joyid.dev",
+  // bitcoin address type, p2wpkh or p2tr
+  requestAddressType: 'p2tr',
+});
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+```
+  </FrameworkTabs.React>
+  <FrameworkTabs.Vue>
+```ts filename="main.ts" /initConfig/
+import { createApp } from "vue";
+import "./style.css";
+import App from "./App.vue";
+import { initConfig } from "@joyid/nostr";
+
+initConfig({
+  // your app name
+  name: "JoyID demo",
+  // your app logo
+  logo: "https://fav.farm/🆔",
+  // JoyID app URL, this is for testnet, for mainnet, use "https://app.joy.id"
+  joyidAppURL: "https://testnet.joyid.dev",
+  // bitcoin address type, p2wpkh or p2tr
+  requestAddressType: 'p2tr',
+});
+
+createApp(App).mount("#app");
+```
+  </FrameworkTabs.Vue>
+</FrameworkTabs>
+
+
+## Request Bitcoin account
+
+After the initialization is completed, you can call the `requestAccounts()` function to connect to JoyID wallet, and call `getPublickey()` to get the public key of the connected account.
+
+import { Callout } from 'nextra/components';
+
+<Callout type="info" emoji="ℹ️">
+After a successful connection, JoyID persists the connection status to the local storage. This means that if your JavaScript code is running in server side, `getPublickey()` will return null.
+So you have to make sure that the code is running in the browser, or persists the connection status to the server side by your own.
+</Callout>
+
+```ts
+import { requestAccounts, getPublickey } from "@joyid/bitcoin";
+
+async function connect() {
+  try {
+    const [address] = await requestAccounts();
+    const publicKey = getPublickey();
+    console.log(address, publicKey);
+  } catch (error) {
+    console.error(error);
+  }
+}
+```
+
+## Sign message
+
+You can call the `signMessage()` function to sign a message with the connected account. The signing type can be `ecdsa` or `bip322-simple`, default is `ecdsa`, return a signature in base64 format.
+
+```ts
+import { signMessage } from "@joyid/bitcoin";
+
+async function sign() {
+  try {
+    const message = "Hello, JoyID!";
+    const signature = await signMessage(message);
+    console.log(signature);
+  } catch (error) {
+    console.error(error);
+  }
+}
+```
+
+## Sign transaction
+
+You can call the `signPsbt()` function to sign a transaction with the connected account. The transaction should be a valid bitcoin transaction in hex format.
+
+```ts
+import { signPsbt } from "@joyid/bitcoin";
+
+async function sign() {
+  const psbt = "..."
+  const signedPsbt = await signPsbt(psbt);
+  console.log(signedPsbt);
+}
+```
+
+## API Reference
+
+- [`initConfig`](/apis/bitcoin/init-config)
+- [`requestAccounts`](/apis/bitcoin/request-accounts)
+- [`getPublickey`](/apis/bitcoin/get-publickey)
+- [`signMessage`](/apis/bitcoin/sign-message)
+- [`signPsbt`](/apis/bitcoin/sign-psbt)
+
+## Full example
+
+For a complete demo, you may check [GitHub ↗](https://github.com/nervina-labs/joyid-bitcoin-demo) and [JoyID Bitcoin Demo ↗](https://joyid-bitcoin-demo.vercel.app/) .
+

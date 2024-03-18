@@ -6,5 +6,6 @@
   "nostr": "@joyid/nostr",
   "wagmi": "@joyid/wagmi",
   "rainbowkit": "@joyid/rainbowkit",
-  "ethereum-provider": "@joyid/ethereum-provider"
+  "ethereum-provider": "@joyid/ethereum-provider",
+  "bitcoin": "@joyid/bitcoin"
 }
