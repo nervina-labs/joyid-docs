@@ -1,0 +1,9 @@
+{
+  "init-config": "initConfig",
+  "request-accounts": "requestAccounts",
+  "get-publickey": "getPublicKey",
+  "get-accounts": "getAccounts",
+  "sign-message": "signMessage",
+  "sign-psbt": "signPsbt",
+  "send-psbt": "sendPsbt"
+}
