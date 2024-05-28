@@ -71,7 +71,7 @@ const connectors = connectorsForWallets(
 )
 
 const config = createConfig({
-  chains: [sepolia, polygonAmoy],
+  chains: [sepolia, polygonAmoy, opBNBTestnet],
   transports: {
     [sepolia.id]: http(),
     [polygonAmoy.id]: http(),
@@ -95,6 +95,8 @@ export const Provider: React.FC<React.PropsWithChildren<any>> = ({
 ```
 
 ## Try it out
+
+<br />
 
 import { Sandbox } from '@/components/sandbox'
 import { useData } from 'nextra/data'

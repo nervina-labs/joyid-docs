@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { nostr, logout, Event, getConnectedPubkey } from '@joyid/nostr'
+// @ts-ignore
 import { getBlankEvent, verifySignature } from 'nostr-tools'
 
 interface Props {
