@@ -4,7 +4,13 @@
 
 JoyID can be used with wagmi as a [Wagmi Connector ↗](https://wagmi.sh/core/config#connectors-optional) by using the `@joyid/wagmi` package.
 
+import { Callout } from 'nextra/components'
+
 ## Installation
+
+<Callout type="info">
+This document is about Wagmi V2. If you want to learn about Wagmi V1, please check out [this document](./wagmi-v1).
+</Callout>
 
 Since `@joyid/wagmi` has a peer dependency on `wagmi`, and `wagmi` has a peer dependency on `viem`, you must have `wagmi` and `viem` installed.
 
@@ -12,13 +18,15 @@ import { PackageManagerTabs } from '@/components/npm-tabs'
 
 <PackageManagerTabs command="install @joyid/wagmi wagmi viem" />
 
+With Wagmi v2, TanStack Query is now a required peer dependency.
 
+Install it with the following command:
+
+<PackageManagerTabs command="install @tanstack/react-query" />
 
 ## Usage
 
 Use JoyID with Wagmi is easy than you think, just need to create a new instance of `JoyIdConnector` and pass it to `WagmiConfig` component.
-
-import { Callout } from 'nextra/components'
 
 <Callout type="info">
 The `joyidAppURL` parameter is the JoyID App URL that your app will connect to.
@@ -26,42 +34,93 @@ The `joyidAppURL` parameter is the JoyID App URL that your app will connect to.
   - Mainnet: https://app.joy.id
 </Callout>
 
-```tsx filename="provider.tsx" /JoyIdConnector/
-import * as React from "react";
-import { WagmiConfig, createConfig, configureChains } from "wagmi";
-import { publicProvider } from "wagmi/providers/public";
-import { sepolia, polygonMumbai } from "wagmi/chains";
-import { JoyIdConnector } from "@joyid/wagmi";
-
-export const { chains, publicClient } = configureChains(
-  [sepolia, polygonMumbai],
-  [publicProvider()],
-);
-
-export const joyidConnector = new JoyIdConnector({
-  chains,
-  options: {
-    // name of your app
-    name: "JoyID demo",
-    // logo of your app
-    logo: "https://fav.farm/🆔",
-    // JoyID app url that your app is integrated with
-    joyidAppURL: "https://testnet.joyid.dev",
-  },
-});
+```tsx filename="provider.tsx" /joyidConnector/
+import React from 'react'
+import { http, WagmiProvider, createConfig } from 'wagmi'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { sepolia } from 'wagmi/chains'
+import { joyidConnector } from '@joyid/wagmi'
 
 const config = createConfig({
-  autoConnect: true,
-  publicClient,
-  connectors: [joyidConnector],
-});
+  chains: [sepolia],
+  transports: {
+    [sepolia.id]: http(),
+  },
+  connectors: [
+    joyidConnector({
+      // name of your app
+      name: 'JoyID Rainbowkit demo',
+      // logo of your app
+      logo: 'https://fav.farm/🆔',
+      // JoyID app url that your app is integrated with
+      joyidAppURL: 'https://testnet.joyid.dev',
+    }),
+  ],
+})
 
-export const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  return <WagmiConfig config={config}>{children}</WagmiConfig>;
-};
+export const Provider: React.FC<React.PropsWithChildren<any>> = ({
+  children,
+}) => {
+  const queryClient = new QueryClient()
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </WagmiProvider>
+  )
+}
 ```
 
 
-### Try it out
+### Live Demo
 
-{<iframe style={{ marginTop: '2rem' }} className="sandbox" src="https://codesandbox.io/p/sandbox/joyid-wagmi-demo-2y6lv4?file=%2Fsrc%2FApp.tsx%3A14%2C18&embed=1"></iframe>}
+<br />
+
+import { Sandbox } from '@/components/sandbox'
+import { useData } from 'nextra/data'
+
+export async function getStaticProps() {
+  const { promises: fs } = require('fs')
+  const path = require('path')
+  const filePaths = ['sandboxes/wagmi/App.tsx', 'sandboxes/wagmi/index.tsx', 'sandboxes/wagmi/provider.tsx', 'sandboxes/wagmi/typedData.tsx']
+  const [appTsxFile, indexTsxFile, providerTsxFile, typedDataTsxFile] = await Promise.all(
+    filePaths.map((file) => fs.readFile(path.resolve(process.cwd(), file), 'utf8'))
+  )
+  return {
+    props: {
+      ssg: {
+        appTsxFile,
+        indexTsxFile,
+        providerTsxFile,
+        typedDataTsxFile,
+      }
+    },
+  }
+}
+
+export function ReactSandBox() {
+  const { appTsxFile, indexTsxFile, providerTsxFile, typedDataTsxFile } = useData()
+  return <Sandbox
+    template="react"
+    id="wagmi-demo"
+    documentTitle="JoyID Wagmi Demo"
+    dependencies={{
+      "@joyid/wagmi": "2.0.0",
+      "@rainbow-me/rainbowkit": "2.1.1",
+      "@tanstack/react-query": "^5.39.0",
+      "viem": "2.10.11",
+      "wagmi": "2.9.7",
+    }}
+    initConfigPackage="@joyid/wagmi"
+    files={{
+      'provider.tsx': providerTsxFile,
+      'index.tsx': indexTsxFile,
+      'typedData.tsx': typedDataTsxFile,
+      'App.tsx': appTsxFile,
+    }}
+    options={{
+      activeFile: 'provider.tsx'
+    }}
+  />
+}
+
+<ReactSandBox />

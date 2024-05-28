@@ -1,6 +1,12 @@
 {
   "wagmi": "Wagmi",
+  "wagmi-v1": {
+    "display": "hidden"
+  },
   "rainbowkit": "RainbowKit",
+  "rainbowkit-v1": {
+    "display": "hidden"
+  },
   "ethers": "Ethers.js",
   "ethereum-provider": "Ethereum Provider"
 }

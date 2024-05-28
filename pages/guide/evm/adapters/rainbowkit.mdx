@@ -2,7 +2,14 @@
 
 [RainbowKit ↗](https://www.rainbowkit.com/) is a React library that makes it easy to add wallet connection to your dapp. It's intuitive, responsive and customizable. JoyID can be used as a [Custom Wallet ↗](https://www.rainbowkit.com/docs/custom-wallets) for RainbowKit by using `@joyid/rainbowkit` package.
 
+import { Callout } from 'nextra/components'
+
 ## Installation
+
+<Callout type="info">
+This document is about RainbowKit V2. If you want to learn about RainbowKit V1, please check out [this document](./rainbowkit-v1).
+</Callout>
+
 
 Since `@joyid/rainbowkit` has a peer dependency on `@rainbow-me/rainbowkit`, and `@rainbow-me/rainbowkit` has a peer dependency on `viem` and `wagmi`, you must have `wagmi`, `viem` and `@rainbow-me/rainbowkit` installed.
 
@@ -10,11 +17,16 @@ import { PackageManagerTabs } from '@/components/npm-tabs'
 
 <PackageManagerTabs command="install @joyid/rainbowkit @rainbow-me/rainbowkit wagmi viem" />
 
+With Wagmi v2, TanStack Query is now a required peer dependency.
+
+Install it with the following command:
+
+<PackageManagerTabs command="install @tanstack/react-query" />
+
 ## Usage
 
 Use JoyID with RainbowKit is easy than you think, just need to import `JoyIdWallet` from `@joyid/rainbowkit` and pass it to `wallets` in `connectorsForWallets` function.
 
-import { Callout } from 'nextra/components'
 
 <Callout type="info">
 The `joyidAppURL` parameter is the JoyID App URL that your app will connect to.
@@ -22,60 +34,116 @@ The `joyidAppURL` parameter is the JoyID App URL that your app will connect to.
   - Mainnet: https://app.joy.id
 </Callout>
 
-```tsx filename="provider.tsx" /JoyIdWallet/
-import { WagmiConfig, createConfig, configureChains } from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
-import { sepolia, polygonMumbai } from 'wagmi/chains';
+```tsx filename="provider.tsx" /createJoyIdWallet/
+import React from 'react'
+import { http, WagmiProvider, createConfig } from 'wagmi'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { sepolia, polygonAmoy, opBNBTestnet } from 'wagmi/chains'
 import {
-    connectorsForWallets,
-    RainbowKitProvider,
-} from '@rainbow-me/rainbowkit';
-import { JoyIdWallet } from '@joyid/rainbowkit'
-import { injectedWallet, coinbaseWallet } from '@rainbow-me/rainbowkit/wallets';
-import '@rainbow-me/rainbowkit/styles.css';
+  connectorsForWallets,
+  RainbowKitProvider,
+} from '@rainbow-me/rainbowkit'
+import { createJoyIdWallet } from '@joyid/rainbowkit'
+import { injectedWallet, coinbaseWallet } from '@rainbow-me/rainbowkit/wallets'
+import '@rainbow-me/rainbowkit/styles.css'
 
-export const { chains, publicClient } = configureChains(
-    [sepolia, polygonMumbai],
-    [publicProvider()]
-);
+const joyidWallet = createJoyIdWallet({
+  // name of your app
+  name: 'JoyID Rainbowkit demo',
+  // logo of your app
+  logo: 'https://fav.farm/🆔',
+  // JoyID app url that your app is integrated with
+  joyidAppURL: 'https://testnet.joyid.dev',
+})
 
-const connectors = connectorsForWallets([
+const connectors = connectorsForWallets(
+  [
     {
-        groupName: 'Recommended',
-        wallets: [
-            JoyIdWallet({
-                chains,
-                options: {
-                  // name of your app
-                  name: "JoyID demo",
-                  // logo of your app
-                  logo: "https://fav.farm/🆔",
-                  // JoyID app url that your app is integrated with
-                  joyidAppURL: "https://testnet.joyid.dev",
-                },
-            }),
-            injectedWallet({ chains, shimDisconnect: true }),
-            coinbaseWallet({ chains, appName: 'JoyID Demo' }),
-            // rainbowWallet({ chains, shimDisconnect: true }),
-        ],
+      groupName: 'Recommended',
+      wallets: [joyidWallet, injectedWallet, coinbaseWallet],
     },
-]);
+  ],
+  {
+    appName: 'JoyID RainbowKit demo',
+    // for walletconnect
+    projectId: 'YOUR_PROJECT_ID',
+  }
+)
 
 const config = createConfig({
-    autoConnect: true,
-    publicClient,
-    connectors,
-});
+  chains: [sepolia, polygonAmoy, opBNBTestnet],
+  transports: {
+    [sepolia.id]: http(),
+    [polygonAmoy.id]: http(),
+    [opBNBTestnet.id]: http(),
+  },
+  connectors,
+})
 
-export const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
-    return (
-        <WagmiConfig config={config}>
-            <RainbowKitProvider chains={chains}>{children}</RainbowKitProvider>
-        </WagmiConfig>
-    );
-};
+export const Provider: React.FC<React.PropsWithChildren<any>> = ({
+  children,
+}) => {
+  const queryClient = new QueryClient()
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>{children}</RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  )
+}
 ```
 
-## Demo
+## Live Demo
 
-For a complete demo, you may check [GitHub ↗](https://github.com/nervina-labs/joyid-rainbow-kit-demo) and [JoyID RainbowKit Demo ↗](https://joyid-rainbow-kit-demo.vercel.app/) .
+<br />
+
+import { Sandbox } from '@/components/sandbox'
+import { useData } from 'nextra/data'
+
+export async function getStaticProps() {
+  const { promises: fs } = require('fs')
+  const path = require('path')
+  const filePaths = ['sandboxes/rainbowkit/App.tsx', 'sandboxes/rainbowkit/index.tsx', 'sandboxes/rainbowkit/provider.tsx', 'sandboxes/rainbowkit/typedData.tsx']
+  const [appTsxFile, indexTsxFile, providerTsxFile, typedDataTsxFile] = await Promise.all(
+    filePaths.map((file) => fs.readFile(path.resolve(process.cwd(), file), 'utf8'))
+  )
+  return {
+    props: {
+      ssg: {
+        appTsxFile,
+        indexTsxFile,
+        providerTsxFile,
+        typedDataTsxFile,
+      }
+    },
+  }
+}
+
+export function ReactSandBox() {
+  const { appTsxFile, indexTsxFile, providerTsxFile, typedDataTsxFile } = useData()
+  return <Sandbox
+    template="react"
+    id="rainbowkit-demo"
+    documentTitle="JoyID RainbowKit Demo"
+    dependencies={{
+      "@joyid/rainbowkit": "2.0.0",
+      "@rainbow-me/rainbowkit": "2.1.1",
+      "@tanstack/react-query": "^5.39.0",
+      "viem": "2.10.11",
+      "wagmi": "2.9.7",
+    }}
+    initConfigPackage="@joyid/rainbowkit"
+    files={{
+      'provider.tsx': providerTsxFile,
+      'index.tsx': indexTsxFile,
+      'typedData.tsx': typedDataTsxFile,
+      'App.tsx': appTsxFile,
+    }}
+    options={{
+      activeFile: 'provider.tsx'
+    }}
+  />
+}
+
+<ReactSandBox />

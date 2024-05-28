@@ -4,7 +4,7 @@ import {
   SandpackProps,
 } from '@codesandbox/sandpack-react'
 
-import { getFileEntry, stylesCss, getViteConfig } from './templates/common'
+import { getFileEntry, stylesCss } from './templates/common'
 
 export interface UseSandpackProps {
   files?: SandpackFiles
@@ -16,15 +16,15 @@ export interface UseSandpackProps {
 
 export const useSandpack = ({
   files = {},
-  template = 'vite-react',
+  template = 'react-ts',
   dependencies = {},
   initPackage,
   options = {},
 }: UseSandpackProps) => {
   const isReact = template.includes('react')
   const sandpackTemplate: SandpackPredefinedTemplate = isReact
-    ? 'vite-react-ts'
-    : 'vite-vue-ts'
+    ? 'react-ts'
+    : 'vue-ts'
 
   // get entry file by current template
   const entryFile = isReact ? 'index.tsx' : 'src/main.ts'
@@ -37,34 +37,35 @@ export const useSandpack = ({
   const customSetup: SandpackProps['customSetup'] = {
     dependencies,
     entry: entryFile,
-    devDependencies: {
-      daisyui: '^3.9.3',
-      unocss: '^0.57.1',
-      'unocss-preset-daisy-cjs': '^7.0.1',
-      '@unocss/reset': '0.57.1',
-      typescript: '^5.2.2',
-    },
   }
 
   options.editorHeight = '500px'
   options.showLineNumbers = false
+  options.externalResources = [
+    'https://cdn.tailwindcss.com',
+    'https://cdn.jsdelivr.net/npm/daisyui@3.9.3/dist/full.css',
+  ]
 
   return {
     customSetup,
     files: {
-      ...filteredFiles,
       [entryFile]: {
         code: getFileEntry(sandpackTemplate, initPackage),
         hidden: false,
-      },
-      'vite.config.ts': {
-        code: getViteConfig(sandpackTemplate),
-        hidden: true,
       },
       [isReact ? 'styles.css' : 'src/styles.css']: {
         code: stylesCss,
         hidden: true,
       },
+      '/sandbox.config.json': {
+        code: `{
+  "infiniteLoopProtection": false,
+  "hardReloadOnChange": false,
+  "view": "browser"
+}`,
+        hidden: true,
+      },
+      ...filteredFiles,
     },
     entryFile,
     sandpackTemplate: sandpackTemplate,
