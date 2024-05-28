@@ -48,6 +48,7 @@ const SandpackGlimmer = ({ code }: { code: string }) => (
 export const Sandbox = memo(function SandpackWrapper(props: SandboxProps): any {
   const { files = {} } = props
   const activeCode = files[Object.keys(files)[0]]
+
   return (
     <Suspense
       fallback={

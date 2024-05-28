@@ -1,13 +1,15 @@
 import React from 'react'
 import { http, WagmiProvider, createConfig } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { sepolia } from 'wagmi/chains'
+import { sepolia, polygonAmoy, opBNBTestnet } from 'wagmi/chains'
 import { joyidConnector } from '@joyid/wagmi'
 
 const config = createConfig({
-  chains: [sepolia],
+  chains: [sepolia, polygonAmoy, opBNBTestnet],
   transports: {
     [sepolia.id]: http(),
+    [polygonAmoy.id]: http(),
+    [opBNBTestnet.id]: http(),
   },
   connectors: [
     joyidConnector({
