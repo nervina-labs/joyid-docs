@@ -29,6 +29,7 @@ const SandboxRoot: React.FC<SandboxProps> = (props) => {
   } else if (theme === 'light') {
     sandpackTheme = 'light'
   }
+
   return (
     <Sandpack
       {...props}

@@ -437,34 +437,64 @@ export default {
 ## Try it out
 
 import { Sandbox } from '@/components/sandbox'
-import { appTsxFile, appVueFile, signEventVueFile } from '@/impl/nostr/nip-07'
+import { appVueFile, signEventVueFile } from '@/impl/nostr/nip-07'
+import { useData } from 'nextra/data'
+
+export async function getStaticProps() {
+  const { promises: fs } = require('fs')
+  const path = require('path')
+  const filePaths = ['sandboxes/nostr/App.tsx', 'sandboxes/nostr/SignEvent.vue', 'sandboxes/nostr/App.vue']
+  const [appTsxFile, signEventVueFile, appVueFile] = await Promise.all(
+    filePaths.map((file) => fs.readFile(path.resolve(process.cwd(), file), 'utf8'))
+  )
+  return {
+    props: {
+      ssg: {
+        appTsxFile,
+        signEventVueFile,
+        appVueFile,
+      }
+    },
+  }
+}
+
+export function ReactSandBox() {
+  const { appTsxFile } = useData()
+  return <Sandbox
+    template="react"
+    dependencies={{
+      "@joyid/nostr": "0.1.2",
+      "nostr-tools": "1.17.0",
+    }}
+    initConfigPackage="@joyid/nostr"
+    files={{
+      'App.tsx': appTsxFile,
+    }}
+  />
+}
+
+export function VueSandBox() {
+  const { appVueFile, signEventVueFile } = useData()
+  return <Sandbox
+    template="vue"
+    dependencies={{
+      "@joyid/nostr": "0.1.2",
+      "nostr-tools": "1.17.0",
+    }}
+    initConfigPackage="@joyid/nostr"
+    files={{
+      'src/App.vue': appVueFile,
+      'src/SignEvent.vue': signEventVueFile,
+    }}
+  />
+}
 
 <FrameworkTabs>
   <FrameworkTabs.React>
-    <Sandbox
-      template="react"
-      dependencies={{
-        "@joyid/nostr": "0.1.2",
-        "nostr-tools": "1.17.0",
-      }}
-      initConfigPackage="@joyid/nostr"
-      files={{
-        'App.tsx': appTsxFile,
-      }}
-    />
+    <ReactSandBox />
   </FrameworkTabs.React>
   <FrameworkTabs.Vue>
-    <Sandbox
-      template="vue"
-      dependencies={{
-        "@joyid/nostr": "0.1.2",
-        "nostr-tools": "1.17.0",
-      }}
-      initConfigPackage="@joyid/nostr"
-      files={{
-        'src/App.vue': appVueFile,
-        'src/SignEvent.vue': signEventVueFile,
-      }}
-    />
+    <VueSandBox />
   </FrameworkTabs.Vue>
 </FrameworkTabs>
+
