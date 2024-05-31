@@ -5,7 +5,7 @@ Open a JoyID app popup window to sign a CKB raw transaction.
 ## Types
 
 ```typescript
-function signRawTransaction: (
+function signRawTransaction(
   tx: Transaction,
   signerAddress: string,
   config?: SignConfig
@@ -48,14 +48,32 @@ interface SignConfig extends PopupConfig {
    */
   joyidServerURL?: string
   /**
-   * The first JoyID input cell position to sign transaction with JoyID lock
+   * The witnessIndex represents the position of the first JoyID cell in inputs, and the default value is 0.
    */
   witnessIndex?: number
+  /**
+   * The witnessLastIndex represents the position of the last JoyID cell in inputs, and the default value is inputs.length - 1
+   * The witnessLastIndex must not be smaller than witnessIndex.
+   * For example: witnessIndex = 1, witnessLastIndex = 3, this means the inputs[1..3] are JoyID cells, and the other inputs are another lock scripts.
+   */
+  witnessLastIndex?: number
 }
+
+/**
+ * Get the subkey unlock from CoTA aggregator to build JoyID witness.
+ * @param aggregatorUrl The CoTA aggregator url
+ * @param connection The response of JoyID function `connect`
+ */
+function getSubkeyUnlock(
+  aggregatorUrl: string,
+  connection: AuthResponseData
+): Promise<string>
 
 ```
 
 ## Example
+
+### signRawTransaction
 
 ```js
 import { signRawTransaction } from '@joyid/ckb'
@@ -130,4 +148,45 @@ async function joyidSignRawTransaction() {
     console.error(e)
   }
 }
+```
+
+### getSubkeyUnlock
+
+`getSubkeyUnlock` is used to build JoyID witness with the sub key
+
+```js
+import { connect, getSubkeyUnlock, getCotaTypeScript } from '@joyid/ckb'
+
+const config = {
+  title: 'Example App',
+  logo: 'https://example.com/logo.png',
+}
+try {
+  const connection = await connect(config)
+  // Build JoyID corresponding witness with subkey unlock entry
+  const unlockEntry = await getSubkeyUnlock("aggregator-url", connection)
+  const emptyWitness = {
+    lock: '',
+    inputType: '',
+    outputType: append0x(unlockEntry),
+  }
+  const joyidWitness = serializeWitnessArgs(emptyWitness)
+
+
+  // Get CoTA cell from CKB blockchain and append it to the head of the cellDeps list
+  const cotaType = getCotaTypeScript(isMainnet)
+  const cotaCells = await collector.getCells({ lock: anyLock, type: cotaType })
+  if (!cotaCells || cotaCells.length === 0) {
+    throw new NoCotaCellException("Cota cell doesn't exist")
+  }
+  const cotaCell = cotaCells[0]
+  const cotaCellDep: CKBComponents.CellDep = {
+    outPoint: cotaCell.outPoint,
+    depType: 'code',
+  }
+  cellDeps = [cotaCellDep, ...cellDeps]
+} catch (e) {
+  console.error(e)
+}
+
 ```
