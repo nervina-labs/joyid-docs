@@ -81,7 +81,7 @@ import JSBI from 'jsbi'
 
 async function joyidSignRawTransaction() {
   try {
-    const signedTx = await signTransaction({
+    const signedTx = await signRawTransaction({
       "version": "0x0",
       "cellDeps": [
           {
