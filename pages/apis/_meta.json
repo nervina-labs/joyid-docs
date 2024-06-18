@@ -7,5 +7,6 @@
   "wagmi": "@joyid/wagmi",
   "rainbowkit": "@joyid/rainbowkit",
   "ethereum-provider": "@joyid/ethereum-provider",
-  "bitcoin": "@joyid/bitcoin"
+  "bitcoin": "@joyid/bitcoin",
+  "public-api": "Public API"
 }
