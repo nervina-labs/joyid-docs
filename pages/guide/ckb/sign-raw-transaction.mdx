@@ -2,6 +2,16 @@
 
 In this guide, we will create and sign a ckb raw transaction using the `@joyid/ckb` SDK `signRawTransaction()` function.
 
+<Callout>
+If there are other lock script cells in the inputs besides the JoyID cells, you need to manually specify the locations of the JoyID cells.
+
+* witnessIndexes?: number[] The witnessIndex represents the positions of JoyID cells in inputs, and the default value is an empty array.
+* witnessIndex?: number The witnessIndex represents the position of the first JoyID cell in inputs, and the default value is 0.
+* witnessLastIndex?: number  The witnessLastIndex represents the position of the last JoyID cell in inputs, and the default value is inputs.length - 1
+
+For details, refer to [witnessIndex / witnessLastIndex / witnessIndexes](https://docs.joyid.dev/apis/ckb/sign-raw-tx#types).
+</Callout>
+
 ## Installation
 
 import { PackageManagerTabs } from '@/components/npm-tabs'
