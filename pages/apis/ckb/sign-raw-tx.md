@@ -167,28 +167,30 @@ const config = {
 }
 try {
   const connection = await connect(config)
-  // Build JoyID corresponding witness with subkey unlock entry
-  const unlockEntry = await getSubkeyUnlock("aggregator-url", connection)
-  const emptyWitness = {
-    lock: '',
-    inputType: '',
-    outputType: append0x(unlockEntry),
-  }
-  const joyidWitness = serializeWitnessArgs(emptyWitness)
 
+  if (connectData.keyType === 'sub_key') {
+    // Build JoyID corresponding witness with subkey unlock entry
+    const unlockEntry = await getSubkeyUnlock("aggregator-url", connection)
+    const emptyWitness = {
+      lock: '',
+      inputType: '',
+      outputType: append0x(unlockEntry),
+    }
+    const joyidWitness = serializeWitnessArgs(emptyWitness)
 
-  // Get CoTA cell from CKB blockchain and append it to the head of the cellDeps list
-  const cotaType = getCotaTypeScript(isMainnet)
-  const cotaCells = await collector.getCells({ lock: anyLock, type: cotaType })
-  if (!cotaCells || cotaCells.length === 0) {
-    throw new NoCotaCellException("Cota cell doesn't exist")
+    // Get CoTA cell from CKB blockchain and append it to the head of the cellDeps list
+    const cotaType = getCotaTypeScript(isMainnet)
+    const cotaCells = await collector.getCells({ lock: anyLock, type: cotaType })
+    if (!cotaCells || cotaCells.length === 0) {
+      throw new NoCotaCellException("Cota cell doesn't exist")
+    }
+    const cotaCell = cotaCells[0]
+    const cotaCellDep: CKBComponents.CellDep = {
+      outPoint: cotaCell.outPoint,
+      depType: 'code',
+    }
+    cellDeps = [cotaCellDep, ...cellDeps]
   }
-  const cotaCell = cotaCells[0]
-  const cotaCellDep: CKBComponents.CellDep = {
-    outPoint: cotaCell.outPoint,
-    depType: 'code',
-  }
-  cellDeps = [cotaCellDep, ...cellDeps]
 } catch (e) {
   console.error(e)
 }
