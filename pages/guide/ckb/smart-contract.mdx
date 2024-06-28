@@ -1,4 +1,4 @@
-# JoyID Smart Contract
+# Smart Contract
 
 ## Introduction
 
