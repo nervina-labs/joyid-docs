@@ -4,5 +4,7 @@ The `@joyid/ckb` SDK provides the `signRawTransaction` function to sign CKB raw 
 
 But we DO NOT recommend developers directly use the `signRawTransaction` function, because the JoyID wallet cannot add extra information to the CKB transaction, such as cell deps, etc. Otherwise, it will increase the CKB transaction size, potentially leading to insufficient original CKB transaction fees and causing the transaction to fail. 
 
-Unless you are sufficiently familiar with assembling CKB transactions with JoyID Wallet, we suggest using **[lumos/joyid](https://github.com/ckb-js/lumos/tree/develop/examples/joyid) and [ckb-ccc/lumos-patche](https://github.com/ckb-ecofund/ccc/tree/master?tab=readme-ov-file#lumos-patches) to build your Dapps**.
+Unless you are sufficiently familiar with assembling CKB transactions with JoyID Wallet, we suggest using [lumos](https://lumos-website.vercel.app/) to assemble CKB transaction and the [JoyID Example with Lumos](https://github.com/ckb-js/lumos/tree/develop/examples/joyid) can be helpful for you.
+
+If you are using [ckb-ccc](https://github.com/ckb-ecofund/ccc) to connect JoyID wallet, you can use [ckb-ccc/lumos-patche](https://github.com/ckb-ecofund/ccc/tree/master?tab=readme-ov-file#lumos-patches) and [lumos](https://lumos-website.vercel.app/) to build you DApps.
 
