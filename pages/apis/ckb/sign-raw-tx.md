@@ -51,16 +51,6 @@ interface SignConfig extends PopupConfig {
    * The witnessIndex represents the positions of JoyID cells in inputs, and the default value is an empty array.
    */
   witnessIndexes?: number[]
-  /**
-   * deprecated: The witnessIndex represents the position of the first JoyID cell in inputs, and the default value is 0.
-   */
-  witnessIndex?: number
-  /**
-   * deprecated: The witnessLastIndex represents the position of the last JoyID cell in inputs, and the default value is inputs.length - 1
-   * The witnessLastIndex must not be smaller than witnessIndex.
-   * For example: witnessIndex = 1, witnessLastIndex = 3, this means the inputs[1..3] are JoyID cells, and the other inputs are another lock scripts.
-   */
-  witnessLastIndex?: number
 }
 
 /**
@@ -154,7 +144,7 @@ async function joyidSignRawTransaction() {
 }
 ```
 
-### getSubkeyUnlock
+### Unlock with Subkey
 
 `getSubkeyUnlock` is used to build JoyID witness with the sub key
 
