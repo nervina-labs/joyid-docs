@@ -63,6 +63,17 @@ function getSubkeyUnlock(
   connection: AuthResponseData
 ): Promise<string>
 
+// Get JoyID contract cell dep
+function getJoyIDCellDep(isMainnet: boolean)
+
+// Get JoyID lock script whose args is empty
+function getJoyIDLockScript(isMainnet: boolean)
+
+// Get CoTA contract cell dep
+function getCotaCellDep(isMainnet: boolean)
+
+// Get CoTA type script whose args is empty
+function getCotaTypeScript(isMainnet: boolean)
 ```
 
 ## Example
@@ -70,7 +81,7 @@ function getSubkeyUnlock(
 ### signRawTransaction
 
 ```js
-import { signRawTransaction } from '@joyid/ckb'
+import { signRawTransaction, getSubkeyUnlock } from '@joyid/ckb'
 import JSBI from 'jsbi'
 
 async function joyidSignRawTransaction() {
