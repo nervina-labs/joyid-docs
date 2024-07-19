@@ -197,3 +197,13 @@ try {
 }
 
 ```
+
+### CoTA Aggregator URL
+
+You can use the following public cota aggregator url to fetch subkey unlock entry:
+
+```
+testnet:  https://cota.nervina.dev/aggregator
+
+mainnet:  https://cota.nervina.dev/mainnet-aggregator 
+```
