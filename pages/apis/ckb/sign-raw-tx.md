@@ -70,6 +70,7 @@ function getJoyIDCellDep(isMainnet: boolean)
 function getJoyIDLockScript(isMainnet: boolean)
 
 // Get CoTA contract cell dep
+// Please ensure that the CoTA cell is the first in cellDeps.
 function getCotaCellDep(isMainnet: boolean)
 
 // Get CoTA type script whose args is empty
@@ -171,6 +172,7 @@ try {
 
   if (connectData.keyType === 'sub_key') {
     // Build JoyID corresponding witness with subkey unlock entry
+    // The aggregator url can be found in the next part of this article
     const unlockEntry = await getSubkeyUnlock("aggregator-url", connection)
     const emptyWitness = {
       lock: '',
@@ -179,9 +181,10 @@ try {
     }
     const joyidWitness = serializeWitnessArgs(emptyWitness)
 
-    // Get CoTA cell from CKB blockchain and append it to the head of the cellDeps list
+    // Get CoTA cell from CKB blockchain and please ensure that the CoTA cell is the first in cellDeps.
     const cotaType = getCotaTypeScript(isMainnet)
-    const cotaCells = await collector.getCells({ lock: anyLock, type: cotaType })
+    // Get CoTA cell with CKB indexer and the indexer filter is joyid lock script and cota type script
+    const cotaCells = await collector.getCells({ lock: joyidLock, type: cotaType })
     if (!cotaCells || cotaCells.length === 0) {
       throw new NoCotaCellException("Cota cell doesn't exist")
     }
@@ -190,6 +193,7 @@ try {
       outPoint: cotaCell.outPoint,
       depType: 'code',
     }
+    // Please ensure that the CoTA cell is the first in cellDeps.
     cellDeps = [cotaCellDep, ...cellDeps]
   }
 } catch (e) {
