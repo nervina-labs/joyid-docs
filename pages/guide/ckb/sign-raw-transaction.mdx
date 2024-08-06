@@ -8,3 +8,11 @@ Unless you are sufficiently familiar with assembling CKB transactions with JoyID
 
 If you are using [ckb-ccc](https://github.com/ckb-ecofund/ccc) to connect JoyID wallet, you can use [ckb-ccc/lumos-patche](https://github.com/ckb-ecofund/ccc/tree/master?tab=readme-ov-file#lumos-patches) and [lumos](https://lumos-website.vercel.app/) to build you DApps.
 
+
+## SubKey unlock
+
+If you are using the `signRawTransaction` of `@joyid/ckb` to sign CKB transaction, please remember to handle the situation of unlocking transactions with **SubKey**. You can refer to the [SubKey Docs](/apis/ckb/sign-raw-tx#unlock-with-subkey) for specific code and documentation.
+
+Two things you should handle are:
+- Fetch subkey unlock entry from CoTA aggregator and append it to the witness, reference: [SubKey Docs](/apis/ckb/sign-raw-tx#unlock-with-subkey)
+- Add CoTA cell to the first place of the cellDeps, reference: [SubKey Docs](/apis/ckb/sign-raw-tx#unlock-with-subkey)
