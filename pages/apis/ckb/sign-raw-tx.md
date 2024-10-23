@@ -198,6 +198,8 @@ try {
     // Get CoTA cell from CKB blockchain and please ensure that the CoTA cell is the first in cellDeps.
     const cotaType = getCotaTypeScript(isMainnet)
     // Get CoTA cell with CKB indexer and the indexer filter is joyid lock script and cota type script
+    // The collector can be from https://github.com/nervina-labs/ckb-dex-sdk/blob/master/src/collector/index.ts#L18 or https://github.com/utxostack/rgbpp-sdk/blob/develop/packages/ckb/src/collector/index.ts#L35
+    // And you can also define your own collector to collect cells whose lock script and type script are matched to JoyID lock and CoTA type.
     const cotaCells = await collector.getCells({ lock: joyidLock, type: cotaType })
     if (!cotaCells || cotaCells.length === 0) {
       throw new NoCotaCellException("Cota cell doesn't exist")
