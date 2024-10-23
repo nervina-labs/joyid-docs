@@ -71,7 +71,7 @@ import { connect } from '@joyid/ckb'
 
 async function joyidConnect() {
   const config = {
-    title: 'Example App',
+    name: 'Example App',
     logo: 'https://example.com/logo.png',
   }
   try {

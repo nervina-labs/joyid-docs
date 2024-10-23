@@ -162,9 +162,15 @@ async function joyidSignRawTransaction() {
 
 ```js
 import { connect, getSubkeyUnlock, getCotaTypeScript } from '@joyid/ckb'
+// "@nervosnetwork/ckb-sdk-utils": "0.109.3",
+import { serializeWitnessArgs } from '@nervosnetwork/ckb-sdk-utils';
+
+function append0x(hex: string) {
+  return hex.startsWith('0x') ? hex : `0x${hex}`
+}
 
 const config = {
-  title: 'Example App',
+  name: 'Example App',
   logo: 'https://example.com/logo.png',
 }
 try {
