@@ -165,9 +165,8 @@ import { connect, getSubkeyUnlock, getCotaTypeScript } from '@joyid/ckb'
 // "@nervosnetwork/ckb-sdk-utils": "0.109.3",
 import { serializeWitnessArgs } from '@nervosnetwork/ckb-sdk-utils';
 
-function append0x(hex: string) {
-  return hex.startsWith('0x') ? hex : `0x${hex}`
-}
+import { blockchain } from "@ckb-lumos/base"
+import { bytes } from "@ckb-lumos/codec"
 
 const config = {
   name: 'Example App',
@@ -180,16 +179,27 @@ try {
     // Build JoyID corresponding witness with subkey unlock entry
     // The aggregator url can be found in the next part of this article
     const unlockEntry = await getSubkeyUnlock("aggregator-url", connection)
+
+    // 1. use serializeWitnessArgs to serialize
     const emptyWitness = {
       lock: '',
       inputType: '',
-      outputType: append0x(unlockEntry),
+      outputType: `0x${unlockEntry}`,
     }
     const joyidWitness = serializeWitnessArgs(emptyWitness)
+
+    // 2. you can also use ckb-lumos to serialize
+    // const joyidWitness = bytes.hexify(
+    //   blockchain.WitnessArgs.pack({
+    //     outputType: new Uint8Array(`0x${unlockEntry}`),
+    //   })
+    // )
 
     // Get CoTA cell from CKB blockchain and please ensure that the CoTA cell is the first in cellDeps.
     const cotaType = getCotaTypeScript(isMainnet)
     // Get CoTA cell with CKB indexer and the indexer filter is joyid lock script and cota type script
+    // The collector can be from https://github.com/nervina-labs/ckb-dex-sdk/blob/master/src/collector/index.ts#L18 or https://github.com/utxostack/rgbpp-sdk/blob/develop/packages/ckb/src/collector/index.ts#L35
+    // And you can also define your own collector to collect cells whose lock script and type script are matched to JoyID lock and CoTA type.
     const cotaCells = await collector.getCells({ lock: joyidLock, type: cotaType })
     if (!cotaCells || cotaCells.length === 0) {
       throw new NoCotaCellException("Cota cell doesn't exist")
